@@ -6,6 +6,11 @@ author: "Anderson Camilo Rodriguez Salvador"
 date: 2026-07-07
 categories: [Machine Learning, NLP, Clasificación]
 image: "thumbnail.png"
+open-graph:
+  image: "thumbnail.png"
+twitter-card:
+  image: "thumbnail.png"
+  card-style: summary_large_image
 ---
 
 <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: center;">

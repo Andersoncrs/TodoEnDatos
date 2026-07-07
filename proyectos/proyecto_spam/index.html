@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Anderson Camilo Rodriguez Salvador">
+<meta name="description" content="Explora cómo construir un modelo de clasificación de texto para detectar correos electrónicos de spam utilizando técnicas avanzadas de procesamiento de lenguaje natural y aprendizaje automático.">
+
+<title>Clasificación de Texto: Detección de Spam con Machine Learning – TodoEnDatos</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0338f273eebcb46a1e33f26d13ba19c5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-0338f273eebcb46a1e33f26d13ba19c5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-0338f273eebcb46a1e33f26d13ba19c5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": true,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">TodoEnDatos</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#introducción-y-contexto-del-proyecto" id="toc-introducción-y-contexto-del-proyecto" class="nav-link active" data-scroll-target="#introducción-y-contexto-del-proyecto"><strong>Introducción y Contexto del Proyecto</strong></a></li>
+  <li><a href="#aspectos-generales-del-conjunto-de-datos" id="toc-aspectos-generales-del-conjunto-de-datos" class="nav-link" data-scroll-target="#aspectos-generales-del-conjunto-de-datos"><strong>Aspectos Generales del Conjunto de Datos</strong></a></li>
+  <li><a href="#problema-a-resolver" id="toc-problema-a-resolver" class="nav-link" data-scroll-target="#problema-a-resolver"><strong>Problema a Resolver</strong></a></li>
+  <li><a href="#hallazgos" id="toc-hallazgos" class="nav-link" data-scroll-target="#hallazgos"><strong>Hallazgos</strong></a>
+  <ul class="collapse">
+  <li><a href="#existe-una-relación-entre-la-longitud-del-mensaje-y-su-categoría-spam-vs.-ham" id="toc-existe-una-relación-entre-la-longitud-del-mensaje-y-su-categoría-spam-vs.-ham" class="nav-link" data-scroll-target="#existe-una-relación-entre-la-longitud-del-mensaje-y-su-categoría-spam-vs.-ham"><strong>¿Existe una relación entre la longitud del mensaje y su categoría (Spam vs.&nbsp;Ham)?</strong></a></li>
+  <li><a href="#existen-patrones-de-lenguaje-como-el-uso-de-mayúsculas-signos-especiales-o-números-que-diferencien-spam-de-ham" id="toc-existen-patrones-de-lenguaje-como-el-uso-de-mayúsculas-signos-especiales-o-números-que-diferencien-spam-de-ham" class="nav-link" data-scroll-target="#existen-patrones-de-lenguaje-como-el-uso-de-mayúsculas-signos-especiales-o-números-que-diferencien-spam-de-ham">¿Existen patrones de lenguaje, como el uso de mayúsculas, signos especiales o números, que diferencien spam de ham?</a>
+  <ul class="collapse">
+  <li><a href="#mayúsculas" id="toc-mayúsculas" class="nav-link" data-scroll-target="#mayúsculas">Mayúsculas</a></li>
+  <li><a href="#signos-especiales" id="toc-signos-especiales" class="nav-link" data-scroll-target="#signos-especiales">Signos especiales</a></li>
+  <li><a href="#numeros" id="toc-numeros" class="nav-link" data-scroll-target="#numeros">Numeros</a></li>
+  </ul></li>
+  <li><a href="#los-mensajes-que-contienen-urls-son-más-propensos-a-ser-spam" id="toc-los-mensajes-que-contienen-urls-son-más-propensos-a-ser-spam" class="nav-link" data-scroll-target="#los-mensajes-que-contienen-urls-son-más-propensos-a-ser-spam"><strong>¿Los mensajes que contienen URLs son más propensos a ser spam?</strong></a></li>
+  <li><a href="#cuáles-son-las-palabras-más-comunes-en-los-mensajes-de-spam-y-en-los-de-ham" id="toc-cuáles-son-las-palabras-más-comunes-en-los-mensajes-de-spam-y-en-los-de-ham" class="nav-link" data-scroll-target="#cuáles-son-las-palabras-más-comunes-en-los-mensajes-de-spam-y-en-los-de-ham">¿Cuáles son las palabras más comunes en los mensajes de spam? ¿Y en los de ham?</a>
+  <ul class="collapse">
+  <li><a href="#no-spam" id="toc-no-spam" class="nav-link" data-scroll-target="#no-spam">No Spam</a></li>
+  <li><a href="#spam" id="toc-spam" class="nav-link" data-scroll-target="#spam">Spam</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#creación-del-modelo" id="toc-creación-del-modelo" class="nav-link" data-scroll-target="#creación-del-modelo"><strong>Creación del Modelo</strong></a>
+  <ul class="collapse">
+  <li><a href="#análisis-de-impacto-en-el-negocio-y-selección-de-métricas" id="toc-análisis-de-impacto-en-el-negocio-y-selección-de-métricas" class="nav-link" data-scroll-target="#análisis-de-impacto-en-el-negocio-y-selección-de-métricas"><strong>Análisis de Impacto en el Negocio y Selección de Métricas</strong></a></li>
+  <li><a href="#discusión-de-resultados-y-dimensionalidad" id="toc-discusión-de-resultados-y-dimensionalidad" class="nav-link" data-scroll-target="#discusión-de-resultados-y-dimensionalidad"><strong>Discusión de Resultados y Dimensionalidad</strong></a></li>
+  <li><a href="#selección-del-modelo-final" id="toc-selección-del-modelo-final" class="nav-link" data-scroll-target="#selección-del-modelo-final"><strong>Selección del Modelo Final</strong></a></li>
+  <li><a href="#hiperparámetros-del-modelo-final" id="toc-hiperparámetros-del-modelo-final" class="nav-link" data-scroll-target="#hiperparámetros-del-modelo-final"><strong>Hiperparámetros del modelo final</strong></a></li>
+  </ul></li>
+  <li><a href="#probar-el-modelo" id="toc-probar-el-modelo" class="nav-link" data-scroll-target="#probar-el-modelo"><strong>Probar el Modelo</strong></a></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><strong>Conclusiones</strong></a></li>
+  <li><a href="#jupyter-notebook" id="toc-jupyter-notebook" class="nav-link" data-scroll-target="#jupyter-notebook"><strong>Jupyter Notebook</strong></a></li>
+  <li><a href="#contacto" id="toc-contacto" class="nav-link" data-scroll-target="#contacto"><strong>Contacto</strong></a></li>
+  </ul>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="proyecto_spam-preview.html"><i class="bi bi-journal-code"></i>Detección de Spam</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Clasificación de Texto: Detección de Spam con Machine Learning</h1>
+<p class="subtitle lead">Un enfoque riguroso mediante NLP, TF-IDF y Complement Naive Bayes</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">Clasificación</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Explora cómo construir un modelo de clasificación de texto para detectar correos electrónicos de spam utilizando técnicas avanzadas de procesamiento de lenguaje natural y aprendizaje automático.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-contents">
+             <p>Anderson Camilo Rodriguez Salvador </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de publicación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">7 de julio de 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: center;">
+<p><!-- GITHUB --> <a href="https://github.com/Andersoncrs" target="_blank" title="GitHub" class="no-external" style="color: #1a252f; text-decoration: none;"> <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewbox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg> </a></p>
+<p><!-- HUGGING FACE (Corregido con base sólida) --> <a href="https://huggingface.co/Andersoncrs" target="_blank" title="Hugging Face" class="no-external" style="text-decoration: none;"> <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewbox="0 0 24 24" style="display: inline-block; vertical-align: middle;"> <circle cx="12" cy="12" r="12" fill="#FFD21E"></circle> <circle cx="9" cy="10" r="1.2" fill="#231f20"></circle> <circle cx="15" cy="10" r="1.2" fill="#231f20"></circle> <path d="M8.5 13.5s1 2 3.5 2 3.5-2 3.5-2" fill="none" stroke="#231f20" stroke-width="1.2" stroke-linecap="round"></path> <path d="M5 16.5c.4-.6 1.1-.7 1.5-.2.5.4.3 1.2-.2 1.5s-1.1.3-1.5-.2c-.3-.3-.2-.8.2-1.1zm14 0c-.4-.6-1.1-.7-1.5-.2-.5.4-.3 1.2.2 1.5s1.1.3 1.5-.2c.3-.3.2-.8-.2-1.1z" fill="#231f20"></path> </svg> </a></p>
+<p><!-- LINKEDIN --> <a href="https://www.linkedin.com/in/andersoncrs" target="_blank" title="LinkedIn" class="no-external" style="color: #0077b5; text-decoration: none;"> <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewbox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg> </a></p>
+</div>
+<section id="introducción-y-contexto-del-proyecto" class="level1">
+<h1><strong>Introducción y Contexto del Proyecto</strong></h1>
+<p>En la era de la comunicación digital instantánea, el filtrado de mensajes no deseados (<em>spam</em>) ha dejado de ser una simple conveniencia para convertirse en una necesidad crítica de seguridad y experiencia de usuario. Aunque los enfoques modernos basados en arquitecturas de aprendizaje profundo (como los <em>Transformers</em>) ofrecen un rendimiento excepcional, su elevado costo computacional y latencia los hacen poco viables para entornos de procesamiento en tiempo real, dispositivos con capacidades limitadas o dispositivos de borde (<em>edge computing</em>).</p>
+<p>Este proyecto aborda el problema de la clasificación de mensajes SMS mediante una combinación clásica pero sumamente eficiente: el procesamiento de lenguaje natural (NLP) con <strong>TF-IDF</strong> (<em>Term Frequency-Inverse Document Frequency</em>) y un clasificador probabilístico <strong>Complement Naive Bayes (CNB)</strong>. El objetivo principal es construir un clasificador extremadamente ligero, veloz y preciso, capaz de operar de manera óptima bajo severas condiciones de desbalanceo de clases.</p>
+</section>
+<section id="aspectos-generales-del-conjunto-de-datos" class="level1">
+<h1><strong>Aspectos Generales del Conjunto de Datos</strong></h1>
+<p>Para el desarrollo y validación de esta solución, utilizamos el conjunto de datos <strong>ucirvine/sms_spam</strong>, un conjunto de datos de referencia en el ámbito del procesamiento de texto que recopila mensajes SMS etiquetados como legítimos (<em>ham</em>) o no deseados (<em>spam</em>).</p>
+</section>
+<section id="problema-a-resolver" class="level1">
+<h1><strong>Problema a Resolver</strong></h1>
+<p>Necesitamos extraer las características principales del conjunto de datos de mensajes de texto que nos permitan, a través de la creación de un modelo, realizar predicciones acerca de si un mensaje de texto es spam o no (ham).</p>
+</section>
+<section id="hallazgos" class="level1">
+<h1><strong>Hallazgos</strong></h1>
+<p>Durante la fase de Análisis Exploratorio de Datos (EDA), identificamos los siguientes hallazgos clave (insights):</p>
+<ul>
+<li>Calidad de los datos y registros duplicados: El conjunto de datos inicial consta de 5,574 filas y presenta una consistencia óptima, ya que no se detectaron valores nulos o vacíos. Sin embargo, se identificaron 403 registros duplicados. Al profundizar en ellos, observamos que corresponden a expresiones cortas y cotidianas que los usuarios envían habitualmente por SMS (por ejemplo, variaciones de “Ok” como “Okie” u “Ok.”), así como respuestas rápidas automatizadas del tipo “Sorry, I’ll call later”. Para evitar sesgos en el entrenamiento y garantizar la capacidad de generalización del modelo, procedimos a eliminar estos duplicados.</li>
+<li>Desbalanceo de clases:</li>
+</ul>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-proporcion-clases" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-proporcion-clases-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/proyecto_spam-grafico-proporcion-clases-output-1.png" id="grafico-proporcion-clases" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="proyecto_spam-preview.html#cell-grafico-proporcion-clases">Fuente: Detección de Spam</a></div>
+<p>La distribución del dataset limpio revela que el 87.3% (4,518) corresponde a mensajes válidos (ham), mientras que solo el 12.7% (653) está etiquetado como spam. Esta marcada asimetría nos indica que nos enfrentamos a un problema de clases altamente desbalanceadas. Para abordar esto, evaluamos implementar técnicas de sobremuestreo o utilizar algoritmos diseñados específicamente para mitigar este efecto. Por esta razón, desde esta etapa preliminar, nos inclinamos fuertemente por el uso de Complement Naive Bayes (CNB), dado que su formulación matemática está optimizada precisamente para manejar conjuntos de datos desequilibrados.</p>
+<p>Una vez exploradas las características generales del dataset, guié el análisis a través de preguntas estratégicas que surgieron durante la exploración inicial. El objetivo de estas preguntas es descubrir patrones o tendencias ocultas que aporten valor al modelado.</p>
+<section id="existe-una-relación-entre-la-longitud-del-mensaje-y-su-categoría-spam-vs.-ham" class="level2">
+<h2 class="anchored" data-anchor-id="existe-una-relación-entre-la-longitud-del-mensaje-y-su-categoría-spam-vs.-ham"><strong>¿Existe una relación entre la longitud del mensaje y su categoría (Spam vs.&nbsp;Ham)?</strong></h2>
+<p>El propósito de esta pregunta es cuantificar el número de palabras de cada mensaje y analizar su comportamiento según la etiqueta correspondiente (ham o spam).Cabe resaltar que, de forma previa al conteo, se realizó una fase de limpieza que incluyó la eliminación de signos de puntuación y caracteres especiales, asegurando así que la métrica de longitud por cantidad de palabras fuera exacta y no se viera distorsionada por elementos de ruido.</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-longitud-sms" class="cell" data-execution_count="19">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-longitud-sms-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/proyecto_spam-grafico-longitud-sms-output-1.png" id="grafico-longitud-sms" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>De este histograma podemos extraer información valiosa, como la siguiente:</p>
+<ul>
+<li>Independientemente de la etiqueta, la mayor concentración de mensajes tiene una longitud en el rango de 1 a 50 palabras.</li>
+<li>Los mensajes válidos tienden a poseer una menor cantidad de palabras, lo que nos indica que suelen ser más directos, ya que su mayor concentración se posiciona en torno a las 10 palabras.</li>
+<li>En cuanto a los mensajes spam, la mayor concentración de palabras se sitúa en torno a las 20-30 palabras. Esto quiere decir que los mensajes spam suelen tener una longitud ligeramente mayor que los mensajes válidos; sin embargo, sigue existiendo una gran cantidad de mensajes válidos que también se sitúan en torno a las 25 palabras.</li>
+</ul>
+<p>Entonces, para responder la pregunta, podemos concluir que, si bien la concentración de palabras de los mensajes spam es ligeramente mayor que la de los mensajes válidos, ambas etiquetas se superponen, lo que nos indica que no hay un umbral o regla clara que podamos establecer para etiquetar los mensajes de acuerdo con su longitud.</p>
+<p>Podemos complementar este análisis mediante la generación de un diagrama de cajas que nos permita identificar con mayor certeza dónde se encuentra la concentración de datos de acuerdo con cada etiqueta:</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-cajas-longitud-sms" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-cajas-longitud-sms-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/proyecto_spam-grafico-cajas-longitud-sms-output-1.png" id="grafico-cajas-longitud-sms" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Aquí podemos confirmar lo siguiente:</p>
+<ul>
+<li>La mayor concentración de datos de los mensajes válidos se encuentra entre 1 y aproximadamente 40 palabras, con una mediana ubicada en torno a las 10.</li>
+<li>En cuanto a los mensajes etiquetados como spam, la mayor concentración de datos se encuentra en mensajes con longitudes de entre 15 y 35 palabras, con una mediana en torno a las 25 palabras.</li>
+</ul>
+</section>
+<section id="existen-patrones-de-lenguaje-como-el-uso-de-mayúsculas-signos-especiales-o-números-que-diferencien-spam-de-ham" class="level2">
+<h2 class="anchored" data-anchor-id="existen-patrones-de-lenguaje-como-el-uso-de-mayúsculas-signos-especiales-o-números-que-diferencien-spam-de-ham">¿Existen patrones de lenguaje, como el uso de mayúsculas, signos especiales o números, que diferencien spam de ham?</h2>
+<section id="mayúsculas" class="level3">
+<h3 class="anchored" data-anchor-id="mayúsculas">Mayúsculas</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-cajas-mayusculas-densidad" class="cell" data-execution_count="25">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-cajas-mayusculas-densidad-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/proyecto_spam-grafico-cajas-mayusculas-densidad-output-1.png" id="grafico-cajas-mayusculas-densidad" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>A partir del análisis del gráfico de densidad sobre la cantidad de letras mayúsculas en los mensajes, se identificaron los siguientes insights clave para el modelo:</p>
+<ul>
+<li>Mensajes Válidos (Ham): Presentan una alta concentración en un rango estrecho (0 a 5 mayúsculas), alineándose con el uso ortográfico estándar (inicios de frase, nombres propios o siglas).</li>
+<li>Mensajes Spam: Muestran una dispersión mucho más amplia y elevada (0 a 30 mayúsculas), impulsada por el uso estratégico de palabras completas en mayúsculas (ej. “FREE”) para captar la atención.</li>
+</ul>
+<p>Aunque esta característica ofrece una separación más clara que el simple conteo de palabras, implementar una regla rígida (como clasificar como spam todo mensaje con más de 5 mayúsculas) es inviable por tres razones críticas:</p>
+<ul>
+<li>Solapamiento y Falsos Positivos: Existe una intersección real en los datos. Un usuario legítimo expresando emoción en mayúsculas sería bloqueado erróneamente.</li>
+<li>Vulnerabilidad (Evasión): Los emisores de spam pueden evadir fácilmente el filtro adaptando su redacción a minúsculas.</li>
+<li>Omisión de la Semántica: El spam se define por su intención y contexto lingüístico. Depender de una sola métrica formal debilita la capacidad predictiva del sistema.</li>
+</ul>
+<p>No existe un umbral cuantitativo perfecto basado únicamente en las mayúsculas debido al solapamiento de las distribuciones. Sin embargo, se confirma un patrón predictivo claro: el spam tiende a un volumen significativamente mayor de mayúsculas. Esta tendencia es un rasgo valioso que el clasificador Complement Naive Bayes (CNB) potenciará al combinarse con el análisis semántico del TF-IDF.</p>
+</section>
+<section id="signos-especiales" class="level3">
+<h3 class="anchored" data-anchor-id="signos-especiales">Signos especiales</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-cajas-caracteres-especiales-densidad" class="cell" data-execution_count="29">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-cajas-caracteres-especiales-densidad-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="index_files/figure-html/proyecto_spam-grafico-cajas-caracteres-especiales-densidad-output-1.png" id="grafico-cajas-caracteres-especiales-densidad" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Del análisis gráfico y estadístico de los caracteres especiales en los mensajes, extraemos los siguientes puntos clave:</p>
+<ul>
+<li>Comportamiento y Solapamiento: Los mensajes válidos se concentran entre 0 y 5 caracteres, mientras que el spam abarca de 0 a 10. Dado que ambas distribuciones se solapan considerablemente cerca del origen, no existe un umbral limpio de separación.</li>
+<li>Tendencia General: A partir de los 5 caracteres especiales, se observa una ligera tendencia: a mayor cantidad de estos caracteres, mayor es la probabilidad de que el mensaje sea spam.</li>
+<li>El Fenómeno de la Cola Larga (&gt;10 caracteres):</li>
+</ul>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-barras-caracteres-especiales" class="cell" data-execution_count="31">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-barras-caracteres-especiales-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="index_files/figure-html/proyecto_spam-grafico-barras-caracteres-especiales-output-1.png" id="grafico-barras-caracteres-especiales" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Al analizar el subgrupo con más de 10 caracteres especiales (38 mensajes en total), encontramos que el 84.2% son válidos y el 15.8% son spam.</p>
+<p>Aunque a primera vista parecería que tener más de 10 caracteres especiales indica que un mensaje es válido, este comportamiento realmente se debe al desbalance de clases original del dataset (5,171 filas en total). Al ser una muestra tan pequeña (38 observaciones), carece de representatividad estadística y solo replica la proporción mayoritaria de mensajes válidos.</p>
+<p>Por lo tanto, concluimos que sí existe una tendencia hacia el spam a mayor cantidad de caracteres especiales, pero esta métrica por sí sola no es concluyente y, por encima de los 10 caracteres, no hay datos suficientes para fijar un patrón definitivo.</p>
+</section>
+<section id="numeros" class="level3">
+<h3 class="anchored" data-anchor-id="numeros">Numeros</h3>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="quarto-embed-nb-cell">
+<div id="cell-distribucion-cantidad-numeros-densidad" class="cell" data-execution_count="34">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-distribucion-cantidad-numeros-densidad-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="index_files/figure-html/proyecto_spam-distribucion-cantidad-numeros-densidad-output-1.png" id="distribucion-cantidad-numeros-densidad" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:45%;">
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-cajas-cantidad-numeros-densidad" class="cell" data-execution_count="35">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-cajas-cantidad-numeros-densidad-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="index_files/figure-html/proyecto_spam-grafico-cajas-cantidad-numeros-densidad-output-1.png" id="grafico-cajas-cantidad-numeros-densidad" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>El análisis de la distribución y el diagrama de cajas revelan un patrón predictivo claro y diferenciado entre ambas clases:</p>
+<ul>
+<li>Mensajes Válidos (Ham): Presentan una distribución asimétrica positiva con una concentración muy alta en 0 números (la gran mayoría contiene entre 0 y 3).</li>
+<li>Mensajes Spam: Muestran una dispersión notablemente mayor, concentrándose principalmente entre 10 y 20 números, con una mediana en torno a 15. Este comportamiento es coherente con su naturaleza (inclusión de montos llamativos, cuentas de depósito o números de contacto).</li>
+<li>Patrón de Probabilidad: Existe una relación directa: a mayor cantidad de números, mayor es la probabilidad de que el mensaje sea spam. Por el contrario, los mensajes válidos casi no los utilizan.</li>
+<li>Certeza Moderada: Esta característica permite identificar la categoría del mensaje con un grado de certeza moderado. Sin embargo, no es infalible, ya que existe una pequeña probabilidad de encontrar mensajes de spam sin números.</li>
+<li>Limitación de Regla Estática: Al ser una métrica fácilmente evadible por los emisores de spam, no se debe usar como un filtro rígido. Su verdadero valor radica en ser una variable complementaria dentro de un modelo complejo que capture también la semántica del texto (como TF-IDF + CNB).</li>
+</ul>
+</section>
+</section>
+<section id="los-mensajes-que-contienen-urls-son-más-propensos-a-ser-spam" class="level2">
+<h2 class="anchored" data-anchor-id="los-mensajes-que-contienen-urls-son-más-propensos-a-ser-spam"><strong>¿Los mensajes que contienen URLs son más propensos a ser spam?</strong></h2>
+<p>Para determinar si la inclusión de enlaces influye en la clasificación, se extrajeron las URLs del conjunto de datos original mediante la librería <code>urlextract</code> (basada en los dominios oficiales de la IANA). Esto garantizó una detección precisa sin depender de expresiones regulares o patrones estáticos que pudieran omitir variantes.</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-cantidad-sms-url" class="cell" data-execution_count="41">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-cantidad-sms-url-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="index_files/figure-html/proyecto_spam-grafico-cantidad-sms-url-output-1.png" id="grafico-cantidad-sms-url" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>A nivel general, las URLs representan una porción pequeña del dataset: solo 160 mensajes (3% del total) contienen uno o más enlaces.</p>
+<p>Al cruzar la presencia de URLs con las etiquetas de los mensajes, se observa un cambio drástico en la tendencia predictiva:</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-proporcion-clases-url" class="cell" data-execution_count="43">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-proporcion-clases-url-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="index_files/figure-html/proyecto_spam-grafico-proporcion-clases-url-output-1.png" id="grafico-proporcion-clases-url" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Mensajes Sin URLs: Existe una clara predominancia de mensajes válidos (Ham). El 89.2% son legítimos, mientras que el 10.8% restante corresponde a spam.</li>
+<li>Mensajes Con URLs: La probabilidad se invierte por completo. El 68.8% son etiquetados como spam, frente a un 31.2% que se consideran válidos.</li>
+</ul>
+<p>En conclusión, existe una relación directa y estadísticamente clara: un mensaje con URL es altamente propenso a ser spam (68.8%).</p>
+<p>Aunque debido al desbalance inicial del dataset el volumen absoluto de spam sin URL sigue siendo mayor, la presencia de un enlace rompe la tendencia general y convierte al spam en la mayoría absoluta dentro de su subgrupo. Por lo tanto, esta característica cuenta con una alta capacidad predictiva que servirá como un excelente complemento semántico para nuestro modelo TF-IDF + CNB.</p>
+</section>
+<section id="cuáles-son-las-palabras-más-comunes-en-los-mensajes-de-spam-y-en-los-de-ham" class="level2">
+<h2 class="anchored" data-anchor-id="cuáles-son-las-palabras-más-comunes-en-los-mensajes-de-spam-y-en-los-de-ham">¿Cuáles son las palabras más comunes en los mensajes de spam? ¿Y en los de ham?</h2>
+<section id="no-spam" class="level3">
+<h3 class="anchored" data-anchor-id="no-spam">No Spam</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-barras-wordcloud-no-spam" class="cell" data-execution_count="55">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-barras-wordcloud-no-spam-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="index_files/figure-html/proyecto_spam-grafico-barras-wordcloud-no-spam-output-1.png" id="grafico-barras-wordcloud-no-spam" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>De la frecuencia de cada palabra podemos extraer la siguiente información valiosa:</p>
+<ul>
+<li>Distribución: La palabra con mayor frecuencia es “got” (226 ocurrencias), descendiendo gradualmente hasta “well” (125). Al no existir un término que domine la distribución, concluimos que el lenguaje en los mensajes SMS válidos es variado y está ampliamente distribuido.</li>
+<li>Vocabulario principal: Las palabras “got”, “like”, “know”, “come” y “good” superan el umbral de las 200 ocurrencias, constituyendo los pilares del vocabulario utilizado.</li>
+<li>Semántica: El vocabulario está dominado principalmente por verbos de acción y estado (got, know, come, see, want, think), conceptos afectivos (love, good) y términos cotidianos (home, day, time).</li>
+<li>Ausencia de patrones de urgencia: Cabe resaltar que, en los mensajes válidos, no se observa vocabulario relacionado con urgencias o transacciones, lo cual indica que los usuarios no suelen emplear términos transaccionales en su comunicación cotidiana vía SMS.</li>
+<li>Análisis complementario: En la nube de palabras (que incluye 40 términos), observamos vocablos adicionales con frecuencias moderadas, tales como “happy”, “sorry”, “later” y “night”. Aunque menos frecuentes, estos términos aportan un significado importante al contexto del mensaje.</li>
+</ul>
+<p>Es fundamental aclarar que la frecuencia de aparición de cada palabra no se relaciona directamente con la cantidad de mensajes que la contienen, dado que un mismo mensaje puede incluir la misma palabra en numerosas ocasiones. Este factor debe considerarse para no sobreestimar la representatividad de ciertos términos en el conjunto de datos.</p>
+</section>
+<section id="spam" class="level3">
+<h3 class="anchored" data-anchor-id="spam">Spam</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-barras-wordcloud-spam" class="cell" data-execution_count="57">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-barras-wordcloud-spam-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="index_files/figure-html/proyecto_spam-grafico-barras-wordcloud-spam-output-1.png" id="grafico-barras-wordcloud-spam" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>El análisis del léxico y la frecuencia de términos en el dataset revela una diferencia estructural profunda entre ambas clases:</p>
+<ul>
+<li><strong>Mensajes Válidos (Ham): Vocabulario Diverso</strong>
+<ul>
+<li>Términos más comunes: “got”, “like”, “know”, “come” y “good”.</li>
+<li>Comportamiento: No existe dominancia de ninguna palabra sobre las demás, lo que refleja un lenguaje natural, variado y conversacional.</li>
+</ul></li>
+<li><strong>Mensajes Spam: Monótono y Persuasivo</strong>
+<ul>
+<li>Términos más comunes: “call” (dominante con &gt;300 apariciones), “free” (188), “txt”, “mobile” y “stop”.</li>
+<li>Estrategia Semántica: El vocabulario está diseñado para activar sesgos cognitivos mediante tres ejes claros:
+<ul>
+<li>Incentivos (Ganchos): free, prize, cash, win, new (asociados a valores monetarios como £1000 o £2000).</li>
+<li>Urgencia (Presión): urgent, guaranteed, latest.</li>
+<li>Llamados a la Acción (CTA) y Contacto: call, claim, reply, send, mobile, phone, txt.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Uno de los hallazgos más valiosos del análisis es que el uso de mayúsculas en términos clave altera drásticamente la probabilidad de spam, rompiendo distribuciones que en minúsculas son equitativas:</p>
+<ul>
+<li>El caso de “STOP”: De 53 apariciones exactas de “STOP”, 52 corresponden a spam y solo una a ham (casi el 100% de probabilidad). Metodológicamente, se utiliza como una falsa opción de desuscripción para validar números activos.</li>
+<li>El caso de “FREE” vs “free”: En minúsculas (“free”), la distribución es equilibrada (Ham: 59, Spam: 56). En mayúsculas (“FREE”), se vuelve un indicador casi absoluto de spam (Ham: 1, Spam: 90).</li>
+<li>Otros términos: Este patrón de comportamiento se replica de manera similar en palabras de alta frecuencia como “URGENT”, “WIN” y “PHONE”.</li>
+</ul>
+<p>El spam es altamente predecible y repetitivo. Mientras que las minúsculas mantienen proporciones divididas, la combinación de palabras clave escritas completamente en mayúsculas eleva la probabilidad de spam a cerca del 100%. Esta sensibilidad al contexto e intensidad de la escritura (case-sensitivity) es un patrón de altísimo valor jerárquico que el procesamiento de texto (TF-IDF) y el clasificador (CNB) explotarán para lograr una predicción precisa.</p>
+</section>
+</section>
+</section>
+<section id="creación-del-modelo" class="level1">
+<h1><strong>Creación del Modelo</strong></h1>
+<p>Para llevar a cabo la creación del modelo, se exploraron diversas configuraciones tanto en el procesamiento del conjunto de datos mediante el método TF-IDF, como en el algoritmo Complement Naive Bayes (CNB). Durante este proceso, se modificaron variables clave como el vocabulario de entrenamiento, los métodos de tokenización y la vectorización de cada elemento, entre otras configuraciones.</p>
+<p>En términos generales, los modelos evaluados presentaron métricas de desempeño muy competitivas y cercanas entre sí. Por ejemplo, al implementar TF-IDF y Complement Naive Bayes con sus parámetros por defecto sobre el conjunto de datos en bruto (crudo), se obtuvo una métrica F1-Score de 0.90. Este resultado es excelente y demuestra que, incluso utilizando los valores base y el conjunto de datos sin transformaciones avanzadas, el rendimiento inicial del modelo es sobresaliente.</p>
+<section id="análisis-de-impacto-en-el-negocio-y-selección-de-métricas" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-de-impacto-en-el-negocio-y-selección-de-métricas"><strong>Análisis de Impacto en el Negocio y Selección de Métricas</strong></h2>
+<p>Para evaluar las modificaciones en el conjunto de datos y las configuraciones de los hiperparámetros, decidimos analizar el impacto real que tendría cada tipo de error del modelo en un escenario de producción. Las equivocaciones del modelo afectan al negocio de manera asimétrica; si bien el objetivo ideal es desviar todos los mensajes de spam hacia su carpeta correspondiente evitando que pasen a la bandeja de entrada, existe un escenario mucho más crítico y peligroso: cuando un mensaje válido (ham) es identificado erróneamente como spam.</p>
+<p>Un correo legítimo puede contener información crucial para el usuario. Por lo tanto, al comparar el impacto de ambos errores, determinamos que lo ideal es detectar la mayor cantidad de spam posible, pero priorizando la reducción de los Falsos Positivos (etiquetar un mensaje válido como correo no deseado).</p>
+<p>Con esta lógica de negocio en mente, implementamos la métrica F0.5-Score, la cual penaliza con el doble de severidad los falsos positivos en comparación con los falsos negativos. De este modo, enfocamos la búsqueda de la configuración idónea en maximizar este indicador, garantizando que el modelo sea mucho más cauteloso ante errores de alto impacto (Falsos Positivos) frente a los de bajo impacto (Falsos Negativos).</p>
+<p>A continuación, se presentan los diferentes modelos evaluados junto con sus métricas más representativas:</p>
+<div class="quarto-embed-nb-cell">
+<div class="cell" data-execution_count="109">
+<div id="tbl-resultados-modelos" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="109">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-resultados-modelos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1: Resumen de Resultados de los Modelos
+</figcaption>
+<div aria-describedby="tbl-resultados-modelos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="109">
+<div>
+
+
+<table class="dataframe cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Modelo</th>
+<th data-quarto-table-cell-role="th">Tamaño TF-IDF</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">Precision</th>
+<th data-quarto-table-cell-role="th">F1-score (CV)</th>
+<th data-quarto-table-cell-role="th">F1-score stdev (CV)</th>
+<th data-quarto-table-cell-role="th">F0.5-score (CV)</th>
+<th data-quarto-table-cell-role="th">F0.5-score stdev (CV)</th>
+<th data-quarto-table-cell-role="th">F1-score (Val)</th>
+<th data-quarto-table-cell-role="th">F0.5-score (Val)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Modelo Base</td>
+<td>7194</td>
+<td>0.8673</td>
+<td>0.9444</td>
+<td>0.8975</td>
+<td>0.0261</td>
+<td>0.9249</td>
+<td>0.0211</td>
+<td>0.9043</td>
+<td>0.9279</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Modelo con vocabulario de 4000 palabras</td>
+<td>4000</td>
+<td>0.8980</td>
+<td>0.9072</td>
+<td>0.8977</td>
+<td>0.0331</td>
+<td>0.9025</td>
+<td>0.0399</td>
+<td>0.9026</td>
+<td>0.9053</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Modelo con GridSearchCV</td>
+<td>42781</td>
+<td>0.8571</td>
+<td>1.0000</td>
+<td>0.8967</td>
+<td>0.0137</td>
+<td>0.9515</td>
+<td>0.0081</td>
+<td>0.9231</td>
+<td>0.9677</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Modelo con Transformaciones</td>
+<td>41112</td>
+<td>0.8980</td>
+<td>0.9888</td>
+<td>0.9240</td>
+<td>0.0228</td>
+<td>0.9609</td>
+<td>0.0137</td>
+<td>0.9412</td>
+<td>0.9692</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="discusión-de-resultados-y-dimensionalidad" class="level2">
+<h2 class="anchored" data-anchor-id="discusión-de-resultados-y-dimensionalidad"><strong>Discusión de Resultados y Dimensionalidad</strong></h2>
+<p>Como se puede observar, las métricas globales de los modelos son bastante similares. Sin embargo, un aspecto crucial a resaltar es la influencia de los hiperparámetros en el método TF-IDF. En dos de los cuatro modelos analizados, la matriz generada superó las 40,000 características, lo que representa un incremento de aproximadamente diez veces en comparación con el modelo que limitó el tamaño del vocabulario TF-IDF a 4,000 características.</p>
+<p>Si bien en entornos de producción reales es fundamental evaluar la disponibilidad de recursos del servidor antes de integrar y desplegar un modelo, cabe destacar que los clasificadores basados en Naive Bayes se caracterizan por su alta eficiencia y bajo consumo de cómputo. Por lo tanto, en este caso particular, las altas dimensiones de la matriz TF-IDF resultante no generan un impacto adverso significativo en el rendimiento del sistema.</p>
+</section>
+<section id="selección-del-modelo-final" class="level2">
+<h2 class="anchored" data-anchor-id="selección-del-modelo-final"><strong>Selección del Modelo Final</strong></h2>
+<p>Con base en el análisis comparativo detallado —evaluando las matrices de confusión y calculando métricas clave como Precision, Recall, F1-Score y F0.5-Score—, y alineando estos resultados con la lógica de negocio, se seleccionó el modelo optimizado mediante GridSearchCV como el más adecuado para su implementación en este caso de estudio.</p>
+<p>A continuación, se presenta la Matriz de Confusión del modelo seleccionado evaluado sobre el conjunto de prueba (test):</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-grafico-matriz-confusion-test" class="cell" data-execution_count="113">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/proyecto_spam-grafico-matriz-confusion-test-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="index_files/figure-html/proyecto_spam-grafico-matriz-confusion-test-output-1.png" id="grafico-matriz-confusion-test" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hiperparámetros-del-modelo-final" class="level2">
+<h2 class="anchored" data-anchor-id="hiperparámetros-del-modelo-final"><strong>Hiperparámetros del modelo final</strong></h2>
+<p>Si deseas conocer a fondo los hiperparámetros utilizados tanto en el método TF-IDF como en el modelo Complement Naive Bayes (CNB), así como descargarlo e implementarlo para realizar tus propias pruebas en un entorno local, puedes acceder al repositorio interactivo. El modelo final se encuentra alojado en Hugging Face, donde también podrás realizar inferencias directamente desde sus servidores en la nube.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span><strong>Nota</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ten en cuenta que la primera inferencia puede tardar unos segundos en ejecutarse si el servidor se encuentra en estado de reposo (inactivo); una vez iniciado, responderá de manera inmediata.</p>
+</div>
+</div>
+<p><a href="https://huggingface.co/Andersoncrs/modelo_TF-IDF_CNB" target="_blank" style="display: inline-block; background-color: #18bc9c; color: #1a252f; padding: 12px 24px; font-weight: bold; font-size: 14px; border: 2px solid #1a252f; border-radius: 8px; text-decoration: none; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); font-family: system-ui, -apple-system, sans-serif; text-align: center;"> 📊 Conocer Hiperparámetros del Modelo </a></p>
+</section>
+</section>
+<section id="probar-el-modelo" class="level1">
+<h1><strong>Probar el Modelo</strong></h1>
+<p>A continuación, encontrarás un cuadro interactivo diseñado para poner a prueba el modelo en tiempo real. El proceso es muy sencillo: simplemente ingresa el texto de un mensaje en el recuadro y presiona el botón “Analizar Texto”. El modelo clasificará el mensaje automáticamente indicando si corresponde a un Mensaje Válido (Ham) o si ha sido etiquetado como Spam. Además de la categoría, podrás observar el nivel de certeza de la predicción, ya que la interfaz mostrará detalladamente los porcentajes de probabilidad que el algoritmo ha calculado para cada una de las dos clases.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Restricción de Idioma
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El modelo ha sido entrenado y validado de manera exclusiva utilizando el conjunto de datos <strong>ucirvine/sms_spam</strong>, el cual está compuesto en su totalidad por mensajes en el <strong>idioma inglés</strong>.</p>
+<p>Adicionalmente, tanto la etapa de extracción de características (TF-IDF) como las reglas gramaticales empleadas para la tokenización con NLTK han sido configuradas bajo los estándares lingüísticos de dicho idioma. Por lo tanto, el modelo <strong>no es apto</strong> para analizar o clasificar mensajes en español u otros idiomas, ya que carece del vocabulario y las estructuras gramaticales necesarias para realizar una predicción precisa.</p>
+</div>
+</div>
+<p>Para facilitarte las pruebas, a continuación se presentan algunos mensajes SMS reales de ejemplo. Estos han sido extraídos directamente del conjunto de datos original (el cual puedes consultar <a href="https://huggingface.co/datasets/ucirvine/sms_spam">Aqui</a>). Puedes copiar y pegar cualquiera de ellos en el cuadro interactivo, o bien escribir tus propios mensajes personalizados para evaluar el rendimiento y la robustez del modelo:</p>
+<ul>
+<li>Go until jurong point, crazy.. Available only in bugis n great world la e buffet… Cine there got amore wat…</li>
+<li>Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question(std txt rate)T&amp;C’s apply 08452810075over18’s</li>
+<li>Nah I don’t think he goes to usf, he lives around here though</li>
+<li>WINNER!! As a valued network customer you have been selected to receivea £900 prize reward! To claim call 09061701461. Claim code KL341. Valid 12 hours only.</li>
+<li>I’m gonna be home soon and i don’t want to talk about this stuff anymore tonight, k? I’ve cried enough today.</li>
+<li>Please call our customer service representative on 0800 169 6031 between 10am-9pm as you have WON a guaranteed £1000 cash or £5000 prize!</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ten en cuenta que la primera inferencia puede tardar unos segundos en ejecutarse si el servidor se encuentra en estado de reposo (inactivo). Una vez que el servidor se inicie, responderá de manera inmediata a todas tus consultas.</p>
+</div>
+</div>
+<div class="gradio-container" style="position: relative; width: 100%; height: 200px; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
+<p><iframe src="https://andersoncrs-clasificador-sms-tf-idf-cnb.hf.space" frameborder="0" width="100%" height="100%" style="display: block; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""> </iframe></p>
+</div>
+<p>⚠️ <strong>¿El cuadro interactivo no se despliega correctamente?</strong> Si el bloque interactivo presenta algún problema de visualización o demora en cargar debido a las restricciones del navegador, puedes acceder directamente a la aplicación alojada en los servidores oficiales de Hugging Face, donde podrás probar su funcionamiento sin ningún inconveniente.</p>
+<p><a href="https://huggingface.co/spaces/Andersoncrs/clasificador_SMS_TF-IDF_CNB" target="_blank" style="display: inline-block; background-color: #18bc9c; color: #1a252f; padding: 12px 24px; font-weight: bold; font-size: 14px; border: 2px solid #1a252f; border-radius: 8px; text-decoration: none; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); font-family: system-ui, -apple-system, sans-serif; text-align: center;"> 🚀 Probar Aplicación en Hugging Face </a></p>
+</section>
+<section id="conclusiones" class="level1">
+<h1><strong>Conclusiones</strong></h1>
+<p>A través de todo el análisis y modelado que hemos realizado en el conjunto de datos SMS, podemos concluir lo siguiente:</p>
+<ul>
+<li><strong>Descripción del conjunto de datos</strong>: Está conformado por 5.573 observaciones, de las cuales se han eliminado 403 debido a que son mensajes duplicados. Además, presenta un gran desbalance a favor de los mensajes válidos, los cuales representan aproximadamente el 87% de todas las observaciones, mientras que los mensajes de spam representan alrededor del 13% restante.</li>
+<li><strong>¿Tiene que ver la longitud del mensaje con su etiqueta (spam vs.&nbsp;ham)?</strong>: Si bien la longitud de los mensajes de spam es ligeramente mayor a la de los mensajes válidos, las distribuciones se superponen, lo que indica que no hay un umbral o regla clara que podamos establecer para etiquetar los mensajes de acuerdo con su longitud. La mediana de los mensajes válidos se ubica en alrededor de 10 palabras, mientras que la de los mensajes de spam se ubica en alrededor de 25.</li>
+<li><strong>¿Existen patrones de lenguaje (uso de mayúsculas, signos especiales o números) que diferencien spam de ham?</strong>:
+<ul>
+<li><strong>Mayúsculas</strong>: Los mensajes de spam tienen un rango más amplio en la cantidad de mayúsculas con respecto a los mensajes válidos, lo que indica una tendencia a un mayor uso de estas en el spam. No hay un umbral que permita separarlos claramente, ya que las distribuciones se solapan, pero se resalta su contribución al modelo como información útil.</li>
+<li><strong>Signos especiales</strong>: Existe una tendencia de que, a mayor cantidad de caracteres especiales, mayor será la probabilidad de que el mensaje sea spam; aunque cabe aclarar que, por sí sola, esta característica no es concluyente. Asimismo, por encima de 10 caracteres especiales no hay suficientes observaciones para extraer una tendencia clara.</li>
+<li><strong>Números</strong>: La cantidad de números en los mensajes presenta un patrón que permite identificar con un grado de certeza moderado si el mensaje es válido o spam. Esto se debe a que, a mayor cantidad de números, hay más probabilidades de que sea spam; sin embargo, aun cuando el mensaje no contiene números, existe una pequeña probabilidad de que sea spam.</li>
+</ul></li>
+<li><strong>¿Los mensajes que contienen URLs son más propensos a ser spam?</strong>: Sí, hay una relación clara: la probabilidad de que un mensaje sea spam dado que contiene una URL es del 68.8%, frente al 31.2% de los que no son spam. Esto contrasta con los mensajes que no contienen URLs, donde las probabilidades se invierten: es más probable que sea un mensaje válido (89.2%) a que sea spam (10.8%). Esto se explica por el desbalance general, donde hay una gran predominancia de mensajes válidos. Cuando se filtra por los mensajes con URL, esa tendencia se rompe drásticamente y el spam pasa a ser la clara mayoría, lo que indica que esta característica tiene una alta capacidad predictiva.</li>
+<li><strong>¿Cuáles son las palabras más comunes en los mensajes de spam y en los de ham?</strong>: En cuanto a los mensajes válidos, la palabra más repetida es ‘got’ (226 ocurrencias). La frecuencia va disminuyendo gradualmente hasta la palabra ‘well’ (125); no hay una palabra que domine la distribución, lo que indica que el lenguaje es variado. Por otro lado, en los mensajes de spam, la palabra ‘call’ domina la distribución con más de 300 apariciones, representando una concentración muy alta. Hay una brecha notable con la siguiente palabra, ‘free’ (188 apariciones), lo que hace que el conjunto de spam sea bastante monótono y repetitivo. Adicionalmente, se destaca el uso de palabras en mayúsculas como ‘STOP’, ‘FREE’ y ‘URGENT’.</li>
+<li><strong>Método TF-IDF</strong>: Lo hemos utilizado por ser ideal para trabajar con texto, ya que permite tokenizar y luego vectorizar cada palabra de acuerdo con su importancia dentro del documento, multiplicada por la importancia en el corpus.</li>
+<li><strong>Modelo de clasificación</strong>: Hemos utilizado Complement Naive Bayes (CNB), una extensión de Multinomial Naive Bayes (MNB) enfocada en conjuntos de datos desbalanceados. Este calcula la probabilidad de que la característica aparezca en el complemento de dicha clase, permitiendo una clasificación equitativa para la clase minoritaria.</li>
+<li><strong>Modelo base</strong>: Al utilizar los valores por defecto del método TF-IDF y el modelo CNB, sin procesamiento previo, obtuvimos valores de rendimiento muy buenos, con una métrica ‘F1’ de 0.90. Esto nos indica que el modelo, utilizando el método TF-IDF y el modelo por sí solo, es capaz de clasificar muy bien los mensajes de acuerdo con su contenido; es decir, tan solo con identificar las herramientas adecuadas para nuestro caso de estudio (el método TF-IDF y Complement Naive Bayes), hemos obtenido una capacidad de generalización muy alta del modelo.</li>
+<li><strong>Lógica de negocio y métrica ‘F0.5’</strong>: En nuestro caso, le hemos dado más importancia a los falsos positivos que a los falsos negativos, ya que consideramos que un mensaje importante que se va a la carpeta de spam genera un impacto negativo mayor en el negocio. Por ende, creamos la métrica ‘F0.5’, basada en ‘F1’, pero penalizando con mayor fuerza los falsos positivos.</li>
+<li><strong>Impacto de limitar el vocabulario</strong>: El impacto en la capacidad de generalización fue muy bajo; obtuvimos un valor de ‘F0.5’ de 0.90 (frente al 0.92 del modelo base). Es decir, disminuimos en 45% las dimensiones del modelo sin apenas afectar su capacidad predictiva.</li>
+<li><strong>Modelo de búsqueda por rejilla (GridSearch)</strong>: Obtuvo los mejores resultados en generalización, con un ‘F0.5’ de 0.95. Como contrapartida, las dimensiones de la matriz TF-IDF crecieron cerca de 6 veces. Esto puede ser una limitante con recursos de cómputo restringidos, aunque priorizamos la generalización.</li>
+<li><strong>Preprocesamiento y estandarización</strong>: La mejora obtenida al procesar el conjunto de datos fue mínima (en torno a 0.01), lo que no representa una ventaja significativa frente a los modelos entrenados con el conjunto de datos crudo. Por tanto, no fue necesario modificar los datos antes del método TF-IDF y el modelo CNB.</li>
+<li><strong>Modelo final</strong>: Ha obtenido métricas muy altas al evaluarlo con el conjunto de prueba, con una ‘F1’ de 0.89 y una ‘F0.5’ de 0.94, demostrando una excelente capacidad de generalización. Hemos minimizado los falsos positivos, alineándonos con el impacto de negocio definido, logrando un modelo capaz de clasificar adecuadamente la gran mayoría de mensajes nuevos.</li>
+</ul>
+</section>
+<section id="jupyter-notebook" class="level1">
+<h1><strong>Jupyter Notebook</strong></h1>
+<p>A continuación, tienes a tu disposición el Notebook interactivo que contiene todos los bloques de código utilizados para llevar a cabo el análisis y el modelado predictivo de este proyecto. En este documento encontrarás un desglose detallado de cada una de las fases del flujo de trabajo: desde la carga y limpieza del conjunto de datos, pasando por la ingeniería de características con TF-IDF, hasta el proceso de entrenamiento, optimización de hiperparámetros y evaluación final del modelo seleccionado.</p>
+<p>Para revisar el código completo y replicar el experimento en tu entorno local, puedes acceder a continuación:</p>
+<p><a href="../../proyectos/proyecto_spam/proyecto_spam.html" target="_blank" style="display: inline-block; background-color: #18bc9c; color: #1a252f; padding: 12px 24px; font-weight: bold; font-size: 14px; border: 2px solid #1a252f; border-radius: 8px; text-decoration: none; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); font-family: system-ui, -apple-system, sans-serif; text-align: center;"> 📓 Explorar Jupyter Notebook del Proyecto </a></p>
+</section>
+<section id="contacto" class="level1">
+<h1><strong>Contacto</strong></h1>
+<p>Muchas gracias por tomarte el tiempo de revisar este informe de análisis y modelado de datos.</p>
+<p>Si tienes alguna pregunta, sugerencia o deseas conectar conmigo, no dudes en escribirme o visitar mis perfiles profesionales:</p>
+<ul>
+<li>💼 <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/andersoncrs">Anderson Rodríguez</a><br>
+</li>
+<li>🐙 <strong>GitHub:</strong> <a href="https://github.com/Andersoncrs">Andersoncrs</a><br>
+</li>
+<li>📧 <strong>Correo Electrónico:</strong> andersoncamilo.rodriguez.s@gmail.com</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

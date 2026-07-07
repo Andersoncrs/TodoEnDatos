@@ -32,6 +32,7 @@ format:
 
 website:
   title: "TodoEnDatos"
+  site-url: "https://andersoncrs.github.io/TodoEnDatos"
   description: "Aprende ciencia de datos y machine learning con TodoEnDatos. Encuentra tutoriales prácticos paso a paso, guías técnicas y proyectos aplicados. "
   search: 
     location: navbar

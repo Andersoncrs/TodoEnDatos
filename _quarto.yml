@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: _site
+
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  error: false
+  freeze: auto
+
+format:
+  html:
+    theme:
+      - flatly
+      - brand
+    toc: true
+    toc-location: left
+    smooth-scroll: true
+    code-fold: show
+    code-copy: true
+    code-overflow: scroll
+    df-print: paged
+    lightbox:
+      match: auto
+      effect: zoom
+      loop: false
+    embed-resources: false
+    link-external-newwindow: true
+    link-external-icon: true
+
+
+website:
+  title: "TodoEnDatos"
+  description: "Aprende ciencia de datos y machine learning con TodoEnDatos. Encuentra tutoriales prácticos paso a paso, guías técnicas y proyectos aplicados. "
+  search: 
+    location: navbar
+    type: overlay
+    copy-button: true
+
+  navbar:
+    collapse: true
+    left:
+      - text: Inicio
+        href: index.qmd 
+#     - text: acerca de
+#        href: about.qmd
+
+
+lang: es
+
+

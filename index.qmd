@@ -1,0 +1,24 @@
+---
+pagetitle: "TodoEnDatos | Ciencia de Datos y Machine Learning"
+description: "Tutoriales prácticos y guías de analítica de datos, machine learning y deep learning aplicados al mundo real."
+page-layout: full
+format:
+  html:
+    toc: false
+listing:
+  contents: "proyectos/*/index.qmd" # Apunta directamente a los index de cada proyecto
+  type: grid                       # Estilo visual moderno en tarjetas (puedes usar 'default' o 'table')
+  sort: "date desc"                # Ordena por fecha, del más reciente al más antiguo
+  categories: true                 # Muestra las etiquetas/categorías en la barra lateral
+  sort-ui: false                   # Desactiva la barra de ordenamiento manual para mayor limpieza
+  filter-ui: false                 # Desactiva la barra de búsqueda manual encima de las tarjetas
+---
+
+::: {.callout-tip}
+## Sitio en Construcción
+¡Hola! Bienvenidos. Muy pronto estará todo el contenido disponible.
+:::
+
+---
+
+## Proyectos Destacados

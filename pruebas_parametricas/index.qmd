@@ -1,0 +1,92 @@
+---
+title: "Tutorial ANOVA Interactivo"
+format: html
+jupyter: tf-idf
+filters:
+  - shinylive
+---
+
+```{python}
+print("Esta es una prueba de Funcionamiento de shinylive en Quarto")
+```
+
+
+
+```{shinylive-python}
+#| standalone: true
+#| components: [viewer]
+#| viewerHeight: 680
+
+from shiny import App, render, ui
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("n", "Tamaño de muestra por grupo (n)", min=5, max=50, value=15),
+            ui.input_slider("diff", "Diferencia entre medias", min=0.0, max=3.0, value=1.5, step=0.1),
+            ui.input_slider("var", "Varianza intra-grupo (σ²)", min=0.5, max=5.0, value=1.0, step=0.1)
+        ),
+        # Fijamos la altura del output del gráfico
+        ui.output_plot("anova_plot", height="420px"),
+        ui.output_text("stats_summary")
+    )
+)
+
+def server(input, output, session):
+    @output
+    @render.plot
+    def anova_plot():
+        np.random.seed(42)
+        k = 3
+        n = input.n()
+        sd = np.sqrt(input.var())
+        
+        g1 = np.random.normal(0, sd, n)
+        g2 = np.random.normal(input.diff(), sd, n)
+        g3 = np.random.normal(input.diff() * 1.5, sd, n)
+        
+        # Ajustamos el tamaño de la figura
+        fig, ax = plt.subplots(figsize=(6.5, 4))
+        ax.boxplot([g1, g2, g3], labels=["Grupo A", "Grupo B", "Grupo C"])
+        ax.set_ylabel("Valor Observado")
+        ax.set_title("Distribución de los Grupos en ANOVA")
+        
+        # Elimina márgenes vacíos alrededor de la figura
+        fig.tight_layout()
+        return fig
+
+    @output
+    @render.text
+    def stats_summary():
+        return f"Configuración actual: n = {input.n()}, Diferencia = {input.diff()}, Varianza = {input.var()}"
+
+app = App(app_ui, server)
+```
+
+```{shinylive-python}
+#| standalone: true
+#| components: [editor, viewer]
+#| viewerHeight: 400
+
+from palmerpenguins import load_penguins
+from plotnine import aes, geom_histogram, ggplot, theme_minimal
+from shiny.express import input, render, ui
+
+dat = load_penguins()
+species = dat["species"].unique().tolist()
+
+ui.input_radio_buttons("species", "Species", species, inline=True)
+
+
+@render.plot(height=300)
+def plot():
+    sel = dat[dat["species"] == input.species()]
+    return (
+        ggplot(aes(x="bill_length_mm"))
+        + geom_histogram(dat, fill="#C2C2C4", binwidth=1)
+        + geom_histogram(sel, fill="#447099", binwidth=1)
+        + theme_minimal()
+    )
+```

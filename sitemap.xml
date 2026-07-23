@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://andersoncrs.github.io/TodoEnDatos/index.html</loc>
-    <lastmod>2026-07-07T19:09:39.903Z</lastmod>
+    <loc>https://andersoncrs.github.io/TodoEnDatos/pruebas_parametricas/index.html</loc>
+    <lastmod>2026-07-23T13:09:31.325Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andersoncrs.github.io/TodoEnDatos/proyectos/proyecto_spam/index.html</loc>
+    <lastmod>2026-07-07T19:16:54.473Z</lastmod>
   </url>
   <url>
     <loc>https://andersoncrs.github.io/TodoEnDatos/proyectos/proyecto_spam/proyecto_spam.html</loc>
     <lastmod>2026-07-07T19:09:39.916Z</lastmod>
   </url>
   <url>
-    <loc>https://andersoncrs.github.io/TodoEnDatos/proyectos/proyecto_spam/index.html</loc>
-    <lastmod>2026-07-07T19:16:54.473Z</lastmod>
+    <loc>https://andersoncrs.github.io/TodoEnDatos/index.html</loc>
+    <lastmod>2026-07-07T19:09:39.903Z</lastmod>
   </url>
 </urlset>

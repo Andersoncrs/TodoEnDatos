@@ -218,6 +218,34 @@ Al igual que en otras pruebas analíticas, el valor $p$ de la prueba de Bartlett
 Dado que la prueba de Bartlett es muy sensible si los datos se alejan de la distribución gaussiana, en casos donde la normalidad no se cumpla estrictamente se recomienda emplear la Prueba de Levene o la Prueba de Fligner-Killeen. La prueba de Levene es mucho más robusta ante desviaciones de la normalidad y evalúa la homocedasticidad analizando las desviaciones absolutas respecto a la mediana de cada grupo.
 :::
 
+# **Principales Pruebas de Hipótesis Paramétricas**
+Una vez comprendidos e interiorizados los conocimientos previos y los supuestos esenciales que rigen a la inferencia paramétrica, recordando que el supuesto de normalidad debe cumplirse de manera transversal en todas las pruebas que realizaremos, mientras que el de homocedasticidad aplicará según la prueba específica, estamos listos para abordar las técnicas propiamente dichas.
+
+A lo largo de este recorrido, exploraremos las pruebas paramétricas más relevantes y utilizadas en el ámbito de la Ciencia de Datos y el Machine Learning: la Prueba Z (Z-Test), la Prueba t de Student (t-Test) y el Análisis de Varianza (ANOVA, por sus siglas en inglés: Analysis of Variance).
+
+Para garantizar un aprendizaje significativo y estructurado, cada una de estas pruebas se presentará mediante una explicación teórica de sus fundamentos y características principales, seguida de un caso práctico aplicado. Este desarrollo seguirá de manera rigurosa la siguiente metodología de 11 pasos para el diseño, ejecución y evaluación de pruebas de hipótesis:
+
+1. **Definición del Problema de Negocio**: Formulación clara de la necesidad o pregunta que motiva el análisis.
+2. **Traducción al Contexto de Ciencia de Datos**: Conversión de la problemática de negocio en un planteamiento estadístico y de Machine Learning.
+3. **Planteamiento de Hipótesis**: Definición explícita de la Hipótesis Nula ($H_0$) y la Hipótesis Alterna ($H_1$).
+4. **Establecimiento del Nivel de Significancia ($\alpha$)**: Fijación del umbral de tolerancia para el Error Tipo I (Por lo general, utilizaremos $\alpha = 0.05$).
+5. **Determinación de la Potencia ($1 - \beta$) y Tamaño de Efecto Esperado**: Definición de la capacidad de detección del test y la magnitud del efecto de interés.
+6. **Cálculo del Tamaño Muestral ($n$)**: Estimación del número de observaciones requeridas a partir de los parámetros que hayamos establecidos.
+7. **Recolección y Preparación de Datos**: Obtención y acondicionamiento de los datos necesarios.
+8. **Evaluación de Supuestos Estadísticos**: Verificación rigurosa de los supuestos para respaldar la validez de la prueba.
+9. **Ejecución de la Prueba y Obtención del $p$-valor**: Cálculo del estadístico de prueba y de la probabilidad asociada.
+10. **Toma de Decisión Estadística**: Evaluación del $p$-valor frente a $\alpha$ para determinar si se rechaza o no se rechaza la Hipótesis Nula ($H_0$).
+11. **Evaluación del Tamaño del Efecto Resultante e Interpretación del Negocio**: Medición de la relevancia práctica del hallazgo y su traducción a decisiones estratégicas.
+
+Esta estructura sistemática nos asegurará tomar decisiones fundamentadas en evidencia estadística sólida, minimizando sesgos y maximizando el impacto analítico en proyectos reales.
+
+Para dar inicio al estudio de las Pruebas de Hipótesis Paramétricas, comenzaremos examinando en detalle la Prueba Z (Z-Test).
+
+## Prueba Z de una Muestra
+
+
+
+
 ```{python}
 print("Esta es una prueba de Funcionamiento de shinylive en Quarto")
 ```

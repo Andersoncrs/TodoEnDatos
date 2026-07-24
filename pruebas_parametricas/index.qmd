@@ -12,7 +12,7 @@ En el presente informe se exploran las pruebas de hipótesis paramétricas de ma
 
 Adicionalmente, el documento se complementa con un entorno interactivo desarrollado mediante Shinylive. Esta plataforma permite modificar en tiempo real diversos parámetros de configuración, facilitando una visualización dinámica e intuitiva sobre el comportamiento de cada prueba y el impacto de los datos en los resultados.
 
-# Conocimientos Previos
+# **Conocimientos Previos**
 Para llevar a cabo las pruebas de hipótesis paramétricas debemos comprender claramente diversos conceptos clave sobre los cuales se sustentan. A continuación, realizaremos un breve repaso sobre los aspectos más importantes para poder entender con solidez las pruebas de hipótesis paramétricas que abordaremos posteriormente:
 
 ## Pruebas de Hipotesis
@@ -105,10 +105,10 @@ $$SE = \frac{\sigma}{\sqrt{n}}$$
 Comprender la relación entre el tamaño de la muestra y el Error Estándar es fundamental al diseñar experimentos, ya que nos permite realizar un cálculo de tamaño muestral para determinar con exactitud cuántos datos necesitamos recolectar para garantizar la potencia deseada (por ejemplo, el 80%) antes de salir al campo a recolectar los datos.
 :::
 
-# Supuestos de las Pruebas Paramétricas
+# **Supuestos de las Pruebas Paramétricas**
 Decimos que una prueba de hipótesis es paramétrica debido a que los datos recolectados deben cumplir con ciertos supuestos fundamentales sobre la población subyacente. Entre estos, destaca el supuesto de normalidad (que los datos se ajusten a una curva gaussiana) y, en pruebas de comparación de dos o más grupos, el supuesto de homocedasticidad (igualdad de varianzas). A continuación, exploraremos en qué consiste el supuesto de normalidad y cómo comprobarlo rigurosamente en nuestros experimentos.
 
-## Supuesto de Normalidad
+## **Supuesto de Normalidad**
 El supuesto de normalidad consiste en evaluar, ya sea de forma gráfica o analítica/estadística, si un conjunto de datos empíricos sigue una distribución teórica normal, también conocida como distribución gaussiana. Esta distribución se caracteriza por ser perfectamente simétrica respecto a su centro y describe cómo se agrupan los valores de una variable aleatoria continua alrededor de su media.
 
 Su Función de Densidad de Probabilidad (PDF, por sus siglas en inglés) está definida matemáticamente por la siguiente ecuación:
@@ -126,17 +126,17 @@ Donde:
 
 Para comprobar si los datos de nuestras muestras cumplen con el supuesto de normalidad, disponemos de tres herramientas principales: dos comprobaciones gráficas y una prueba estadística analítica.
 
-### Histograma
+### *Histograma*
 El histograma nos permite visualizar la distribución empírica de las frecuencias de los datos. Es muy fácil de construir e interpretar, permitiéndonos descartar rápidamente la normalidad cuando la distribución muestra un comportamiento claramente asimétrico. Por ejemplo, si observamos que la mayoría de las barras están acumuladas hacia la izquierda (sesgo a la derecha) o hacia la derecha (sesgo a la izquierda), o si existen múltiples picos (distribución bimodal o multimodal), podemos descartar el supuesto de normalidad.
 
 Sin embargo, si la forma del histograma se asemeja a una campana, no podemos asumir con total certeza que siga una distribución normal teórica. Por ello, el histograma sirve como una primera inspección visual para descartar casos evidentes de no normalidad, pero debe complementarse con otras herramientas.
 
-### Gráfico Cuantil-Cuantil (Q-Q Plot)
+### *Gráfico Cuantil-Cuantil (Q-Q Plot)*
 Es una herramienta visual sustancialmente más robusta que el histograma. Consiste en graficar los cuantiles observados en nuestros datos reales frente a los cuantiles teóricos que tendría una distribución normal estándar ($\mu = 0, \sigma = 1$).
 
 Si nuestros datos provienen de una distribución normal, los puntos en el gráfico se alinearán estrechamente a lo largo de una línea diagonal de referencia a 45 grados. Esta gráfica es fácil de interpretar y generar mediante lenguajes de programación como Python o R. Su ventaja radica en que las desviaciones en las colas o en el centro de la distribución saltan a la vista de inmediato. Aunque nos brinda un mayor grado de certeza que el histograma, para contar con el máximo rigor científico se recomienda acompañarla de una prueba estadística analítica como la prueba Shapiro-Wilk.
 
-### Prueba de Shapiro-Wilk
+### *Prueba de Shapiro-Wilk*
 Es una prueba de hipótesis diseñada específicamente para evaluar el supuesto de normalidad, siendo considerada una de las más potentes y rigurosas en la literatura estadística (especialmente para tamaños de muestra pequeños y medianos, generalmente $n < 50$ o $n < 100$).
 
 La prueba de Shapiro-Wilk plantea el siguiente contraste de hipótesis:
@@ -164,7 +164,7 @@ La estrategia recomendada es incialmente, evaluar la normalidad con la prueba de
 
 :::
 
-## Supuesto de Homocedasticidad
+## **Supuesto de Homocedasticidad**
 El supuesto de homocedasticidad (tambien denominado homogeneidad de varianzas) es una condición fundamental en las pruebas de hipótesis paramétricas que involucran la comparación de dos o más muestras (como el Análisis de Varianza - ANOVA).
 
 Decimos que dos o más conjuntos de datos cumplen con el supuesto de homocedasticidad cuando todas las muestras presentan varianzas poblacionales iguales desde el punto de vista estadístico ($\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2$). Es crucial aclarar que el término "iguales" no exige que el cálculo numérico exacto de las varianzas muestrales sea idéntico, sino que las diferencias observadas entre ellas sean tan pequeñas que puedan atribuirse razonablemente al azar muestral.
@@ -175,7 +175,7 @@ Por el contrario, cuando las varianzas entre los grupos difieren de forma estad�
 
 Para evaluar el supuesto de homocedasticidad, proceso que habitualmente se realiza tras verificar la normalidad de los datos, disponemos de dos herramientas complementarias: un análisis gráfico exploratorio y una prueba estadística analítica.
 
-### Diagrama de Cajas
+### *Diagrama de Cajas*
 El diagrama de cajas es la herramienta gráfica por excelencia para comparar visualmente la dispersión entre múltiples grupos. Este gráfico resume la distribución de los datos a través de sus cuantiles principales:
 
 - **Primer Cuartil ($Q_1$)**: Límite inferior de la caja (percentil 25).
@@ -195,7 +195,7 @@ Al graficar los diagramas de cajas lado a lado para cada grupo mediante librerí
 La inspección visual del gráfico de cajas es sumamente intuitiva y directa cuando comparamos dos o tres grupos. Sin embargo, a medida que aumenta el número de muestras ($k \ge 4$), se vuelve más difuso determinar a simple vista si las diferencias en la altura de las cajas es significativa o no. Por esta razón, la gráfica debe acompañarse siempre de una prueba analítica rigurosa.
 :::
 
-### Prueba de Bartlet
+### *Prueba de Bartlet*
 Al igual que la prueba de Shapiro-Wilk para el supuesto de normalidad, la Prueba de Bartlett es un contraste de hipótesis diseñado para determinar formalmente si dos o más grupos provienen de poblaciones con la misma varianza.
 
 ::: {.callout-important title="Requisito previo indispensable"}

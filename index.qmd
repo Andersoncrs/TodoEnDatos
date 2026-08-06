@@ -7,7 +7,7 @@ format:
     toc: false
 listing:
   contents: "proyectos/*/index.qmd" # Apunta directamente a los index de cada proyecto
-  type: grid                       # Estilo visual moderno en tarjetas (puedes usar 'default' o 'table')
+  type: grid                       # 'default' o 'table'
   sort: "date desc"                # Ordena por fecha, del más reciente al más antiguo
   categories: true                 # Muestra las etiquetas/categorías en la barra lateral
   sort-ui: false                   # Desactiva la barra de ordenamiento manual para mayor limpieza

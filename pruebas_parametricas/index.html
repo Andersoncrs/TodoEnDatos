@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Tutorial ANOVA Interactivo – TodoEnDatos</title>
+<title>Pruebas de hipótesis Paramétricas - Estadística Inferencial – TodoEnDatos</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -114,7 +114,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script defer="" src="https://cloud.umami.is/script.js" data-website-id="8be8ffb4-0418-4e24-a907-45c1058d2ec3"></script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -150,7 +180,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#conocimientos-previos" id="toc-conocimientos-previos" class="nav-link active" data-scroll-target="#conocimientos-previos"><strong>Conocimientos Previos</strong></a>
+  <ul class="collapse">
+  <li><a href="#pruebas-de-hipotesis" id="toc-pruebas-de-hipotesis" class="nav-link" data-scroll-target="#pruebas-de-hipotesis">Pruebas de Hipotesis</a></li>
+  <li><a href="#significacia-estaditica-y-el-valor-p" id="toc-significacia-estaditica-y-el-valor-p" class="nav-link" data-scroll-target="#significacia-estaditica-y-el-valor-p">Significacia Estaditica y el valor p</a></li>
+  <li><a href="#error-tipo-i-y-tipo-ii" id="toc-error-tipo-i-y-tipo-ii" class="nav-link" data-scroll-target="#error-tipo-i-y-tipo-ii">Error Tipo I y Tipo II</a></li>
+  <li><a href="#potencia-de-una-prueba-1---beta" id="toc-potencia-de-una-prueba-1---beta" class="nav-link" data-scroll-target="#potencia-de-una-prueba-1---beta">Potencia de una Prueba (<span class="math inline">\(1 - \beta\)</span>)</a></li>
+  </ul></li>
+  <li><a href="#supuestos-de-las-pruebas-paramétricas" id="toc-supuestos-de-las-pruebas-paramétricas" class="nav-link" data-scroll-target="#supuestos-de-las-pruebas-paramétricas"><strong>Supuestos de las Pruebas Paramétricas</strong></a>
+  <ul class="collapse">
+  <li><a href="#supuesto-de-normalidad" id="toc-supuesto-de-normalidad" class="nav-link" data-scroll-target="#supuesto-de-normalidad"><strong>Supuesto de Normalidad</strong></a>
+  <ul class="collapse">
+  <li><a href="#histograma" id="toc-histograma" class="nav-link" data-scroll-target="#histograma"><em>Histograma</em></a></li>
+  <li><a href="#gráfico-cuantil-cuantil-q-q-plot" id="toc-gráfico-cuantil-cuantil-q-q-plot" class="nav-link" data-scroll-target="#gráfico-cuantil-cuantil-q-q-plot"><em>Gráfico Cuantil-Cuantil (Q-Q Plot)</em></a></li>
+  <li><a href="#prueba-de-shapiro-wilk" id="toc-prueba-de-shapiro-wilk" class="nav-link" data-scroll-target="#prueba-de-shapiro-wilk"><em>Prueba de Shapiro-Wilk</em></a></li>
+  </ul></li>
+  <li><a href="#supuesto-de-homocedasticidad" id="toc-supuesto-de-homocedasticidad" class="nav-link" data-scroll-target="#supuesto-de-homocedasticidad"><strong>Supuesto de Homocedasticidad</strong></a>
+  <ul class="collapse">
+  <li><a href="#diagrama-de-cajas" id="toc-diagrama-de-cajas" class="nav-link" data-scroll-target="#diagrama-de-cajas"><em>Diagrama de Cajas</em></a></li>
+  <li><a href="#prueba-de-bartlet" id="toc-prueba-de-bartlet" class="nav-link" data-scroll-target="#prueba-de-bartlet"><em>Prueba de Bartlet</em></a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#principales-pruebas-de-hipótesis-paramétricas" id="toc-principales-pruebas-de-hipótesis-paramétricas" class="nav-link" data-scroll-target="#principales-pruebas-de-hipótesis-paramétricas"><strong>Principales Pruebas de Hipótesis Paramétricas</strong></a></li>
+  <li><a href="#las-prueba-z-z-test" id="toc-las-prueba-z-z-test" class="nav-link" data-scroll-target="#las-prueba-z-z-test">Las Prueba Z (z-Test)</a>
+  <ul class="collapse">
+  <li><a href="#la-prueba-z-de-una-muestra" id="toc-la-prueba-z-de-una-muestra" class="nav-link" data-scroll-target="#la-prueba-z-de-una-muestra">LA Prueba Z de una muestra</a></li>
+  </ul></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -161,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Tutorial ANOVA Interactivo</h1>
+<h1 class="title">Pruebas de hipótesis Paramétricas - Estadística Inferencial</h1>
 </div>
 
 
@@ -178,7 +239,324 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="dc385488" class="cell" data-execution_count="1">
+<p>En la actualidad, las pruebas de hipótesis paramétricas constituyen una herramienta fundamental de la estadística inferencial para determinar si existen diferencias estadísticamente significativas entre una muestra y un valor de referencia, o bien entre dos o más conjuntos de datos. Su propósito principal es disminuir la incertidumbre en la toma de decisiones, permitiendo evaluar si las variaciones observadas entre las mediciones responden a un efecto real o si son simplemente consecuencia de la aleatoriedad del muestreo.</p>
+<p>En el presente informe se exploran las pruebas de hipótesis paramétricas de mayor relevancia en el ámbito de la ciencia de datos. Para ello, se analizan sus características fundamentales, los supuestos estadísticos indispensables para su correcta aplicación (como la normalidad o la homocedasticidad), la metodología paso a paso para su ejecución y sus respectivos ejemplos de uso práctico.</p>
+<p>Adicionalmente, el documento se complementa con un entorno interactivo desarrollado mediante Shinylive. Esta plataforma permite modificar en tiempo real diversos parámetros de configuración, facilitando una visualización dinámica e intuitiva sobre el comportamiento de cada prueba y el impacto de los datos en los resultados.</p>
+<section id="conocimientos-previos" class="level1">
+<h1><strong>Conocimientos Previos</strong></h1>
+<p>Para llevar a cabo las pruebas de hipótesis paramétricas debemos comprender claramente diversos conceptos clave sobre los cuales se sustentan. A continuación, realizaremos un breve repaso sobre los aspectos más importantes para poder entender con solidez las pruebas de hipótesis paramétricas que abordaremos posteriormente:</p>
+<section id="pruebas-de-hipotesis" class="level2">
+<h2 class="anchored" data-anchor-id="pruebas-de-hipotesis">Pruebas de Hipotesis</h2>
+<p>Para entender rápidamente qué es una prueba de hipótesis, lo explicaremos a través de un ejemplo intuitivo:</p>
+<p>Supongamos que tenemos dos sitios web diferentes y queremos determinar con cuál obtenemos una mayor tasa de conversión; es decir, de todas las personas que ingresan al sitio, qué porcentaje termina comprando un producto. Para este ejemplo, imaginemos que hemos recolectado datos de dos muestras: un grupo que navegó en el Sitio Web A y otro grupo que utilizó el Sitio Web B. Supongamos que la tasa de conversión observada en el Sitio Web A es del 10% y en el Sitio Web B es del 12%.</p>
+<p>Intuitivamente, podríamos pensar que es evidente que el Sitio Web B es mejor, ya que incrementó la tasa de conversión en un 2%. Sin embargo, aquí es donde debemos ser rigurosos: ¿cómo podemos comprobar que ese 2% de diferencia no se debe simplemente a la aleatoriedad de los datos? Es decir, ¿no podría ser una simple coincidencia que en la muestra del Sitio Web B entraran usuarios más propensos a comprar? Aquí es donde entra en juego la prueba de hipótesis.</p>
+<p>Una prueba de hipótesis se define formalmente como un procedimiento basado en la evidencia muestral y la teoría de la probabilidad para determinar si una afirmación sobre un parámetro poblacional (como una media <span class="math inline">\(\mu\)</span> o una proporción <span class="math inline">\(p\)</span>) es razonable o debe ser rechazada. En nuestro ejemplo, nos permite decidir si la diferencia del 2% observada en las muestras refleja un efecto real en la población de usuarios o si es únicamente un producto del azar muestral.</p>
+<p>Las pruebas de hipótesis se caracterizan por contrastar dos hipótesis estadísticamente mutuamente excluyentes (si una se asume como verdadera, la otra no puede serlo): la Hipótesis Nula (<span class="math inline">\(H_0\)</span>) y la Hipótesis Alternativa (<span class="math inline">\(H_1\)</span>).</p>
+<ul>
+<li><p><strong>Hipótesis Nula (<span class="math inline">\(H_0\)</span>)</strong>: Esta hipótesis siempre plantea la ausencia de efecto, cambio o diferencia entre los grupos evaluados o respecto a un valor de referencia. Asume que cualquier variación observada en los datos se debe únicamente al azar o a la variabilidad muestral intrínseca. En nuestro caso de estudio, la hipótesis nula establece que ambos sitios web tienen exactamente la misma tasa de conversión poblacional (<span class="math inline">\(p_A = p_B\)</span> o <span class="math inline">\(p_B - p_A = 0\)</span>), por lo que la diferencia observada del 2% es mero ruido aleatorio.</p></li>
+<li><p><strong>Hipótesis Alternativa (<span class="math inline">\(H_1\)</span>)</strong>: Plantea lo opuesto a la hipótesis nula. Afirma que sí existe un efecto, un cambio real o una diferencia estadísticamente significativa entre los datos que estamos midiendo. Llevado a nuestro ejemplo, la hipótesis alternativa sostiene que la tasa de conversión del Sitio Web B es realmente diferente a la del Sitio Web A (<span class="math inline">\(p_B \neq p_A\)</span> o <span class="math inline">\(p_B &gt; p_A\)</span>), y que esa ganancia del 2% no es fruto de la casualidad, sino del diseño del Sitio Web B que incentiva a los usuarios a comprar más.</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tip - Selección de la muestra de referencia">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip - Selección de la muestra de referencia
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Siempre que realicemos una prueba de hipótesis para comparar dos muestras, es muy útil definir cuál será nuestra muestra de referencia (o grupo de control), ya que la comparación se estructurará respecto a ella. Por ejemplo, en nuestro estudio tomaremos como referencia el Sitio Web A. Esto nos facilita enormemente la correcta formulación de la dirección en la Hipótesis Alternativa (<span class="math inline">\(H_1\)</span>).</p>
+</div>
+</div>
+<p>Es importante destacar que, mientras la hipótesis nula (<span class="math inline">\(H_0\)</span>) siempre representa una igualdad o ausencia de diferencia (<span class="math inline">\(H_0: \text{parámetro}_1 = \text{parámetro}_2\)</span>), la hipótesis alternativa (<span class="math inline">\(H_1\)</span>) puede tomar tres direcciones según la pregunta de investigación que estemos planteando:</p>
+<ul>
+<li>Unilateral Izquierda (Cola izquierda): Establece que el parámetro del grupo evaluado es menor que el del grupo de referencia. En nuestro ejemplo, plantearía que el Sitio Web B genera una tasa de conversión menor que el Sitio Web A (<span class="math inline">\(H_1: p_B &lt; p_A\)</span>).</li>
+<li>Unilateral Derecha (Cola derecha): Establece que el parámetro del grupo evaluado es mayor que el del grupo de referencia. En el ejemplo, plantearía que el Sitio Web B genera una tasa de conversión superior a la del Sitio Web A (<span class="math inline">\(H_1: p_B &gt; p_A\)</span>).</li>
+<li>Bilateral (Dos colas): Establece simplemente que existe una diferencia entre las métricas de ambos grupos, sin importar cuál de los dos sea mayor. En nuestro caso, afirmaría que las tasas de conversión son estadísticamente distintas (<span class="math inline">\(H_1: p_B \neq p_A\)</span>).</li>
+</ul>
+</section>
+<section id="significacia-estaditica-y-el-valor-p" class="level2">
+<h2 class="anchored" data-anchor-id="significacia-estaditica-y-el-valor-p">Significacia Estaditica y el valor p</h2>
+<p>Cuando realizamos una prueba de hipótesis, el criterio para decidir si la evidencia muestral es suficiente para rechazar la hipótesis nula (<span class="math inline">\(H_0\)</span>) y respaldar la hipótesis alternativa (<span class="math inline">\(H_1\)</span>) se fundamenta en la interacción entre el valor <span class="math inline">\(p\)</span> y el nivel de significancia (<span class="math inline">\(\alpha\)</span>).</p>
+<ul>
+<li><strong>El valor <span class="math inline">\(p\)</span> (<span class="math inline">\(p\text{-value}\)</span>)</strong>: Representa la probabilidad de obtener un resultado muestral tan o más extremo que el observado, bajo el supuesto de que la hipótesis nula (<span class="math inline">\(H_0\)</span>) sea verdadera. Aterrizado a nuestro ejemplo, el valor <span class="math inline">\(p\)</span> nos indica qué tan probable es observar una diferencia del 2% (o más) en las tasas de conversión si en realidad ambos sitios web fuesen exactamente iguales.</li>
+<li><strong>El nivel de significancia (<span class="math inline">\(\alpha\)</span>)</strong>: Es el umbral o límite que fijamos previamente para definir qué tan improbable debe ser un evento para considerar que la hipótesis nula no es sostenible. Técnicamente, <span class="math inline">\(\alpha\)</span> representa el riesgo máximo que estamos dispuestos a asumir de rechazar <span class="math inline">\(H_0\)</span> cuando en realidad era verdadera.</li>
+</ul>
+<p>Mientras que el nivel de significancia (<span class="math inline">\(\alpha\)</span>) lo define el investigador antes de analizar los datos, el valor <span class="math inline">\(p\)</span> se calcula directamente a partir de la prueba estadística realizada con los datos de la muestra.</p>
+<p>La regla de decisión se establece de la siguiente manera:</p>
+<ul>
+<li><strong>Si valor <span class="math inline">\(p \le \alpha\)</span></strong>: El resultado es estadísticamente significativo. La probabilidad de que los datos provengan del azar es tan baja que rechazamos la hipótesis nula (<span class="math inline">\(H_0\)</span>) a favor de la hipótesis alternativa (<span class="math inline">\(H_1\)</span>).</li>
+<li><strong>Si valor <span class="math inline">\(p &gt; \alpha\)</span></strong>: No hay evidencia estadística suficiente para rechazar la hipótesis nula (<span class="math inline">\(H_0\)</span>).</li>
+</ul>
+<p>Por convención estándar en la mayoría de las investigaciones, se suele fijar un nivel de significancia de <span class="math inline">\(\alpha = 0.05\)</span> (5%). Esto significa que si la probabilidad de obtener nuestros resultados por puro azar es menor al 5%, consideramos que hay evidencia suficiente en contra de <span class="math inline">\(H_0\)</span>. Cabe resaltar que este valor puede variar según qué tan estrictos queramos ser: en estudios científicos o médicos más rigurosos se maneja un nivel del 1% (<span class="math inline">\(\alpha = 0.01\)</span>), exigiendo una evidencia aún más contundente para rechazar la hipótesis nula.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Certeza y probabilidad en las pruebas de hipótesis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Certeza y probabilidad en las pruebas de hipótesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dado que trabajamos con muestras e inferencia probabilística, tomar una decisión sobre <span class="math inline">\(H_0\)</span> u <span class="math inline">\(H_1\)</span> nunca nos brinda una certeza absoluta del 100%. Siempre existirá un margen de incertidumbre inherente al muestreo. No obstante, las pruebas de hipótesis nos proporcionan un marco metodológico objetivo para tomar la ruta de mayor confianza estadística, reduciendo al mínimo el riesgo de tomar decisiones equivocadas.</p>
+</div>
+</div>
+</section>
+<section id="error-tipo-i-y-tipo-ii" class="level2">
+<h2 class="anchored" data-anchor-id="error-tipo-i-y-tipo-ii">Error Tipo I y Tipo II</h2>
+<p>Cuando realizamos una prueba de hipótesis, como las probabilidades nunca serán exactamente iguales al 0% ni al 100% de certeza respecto a si la decisión de rechazar o no la hipótesis nula (<span class="math inline">\(H_0\)</span>) es correcta, siempre existirá cierto grado de incertidumbre. Por lo tanto, es posible que terminemos cometiendo un error al tomar la decisión. Los errores que podemos cometer en la inferencia estadística se clasifican en dos tipos:</p>
+<ul>
+<li><strong>Error Tipo I (Falso Positivo - <span class="math inline">\(\alpha\)</span>)</strong>: Ocurre cuando rechazamos la hipótesis nula (<span class="math inline">\(H_0\)</span>) cuando en realidad era verdadera. Cuando establecemos el nivel de significancia para la prueba (que generalmente fijamos en <span class="math inline">\(\alpha = 0.05\)</span> o 5%), estamos indicando que si el valor <span class="math inline">\(p\)</span> se ubica por debajo de ese umbral, rechazaremos <span class="math inline">\(H_0\)</span> y apoyaremos la hipótesis alternativa (<span class="math inline">\(H_1\)</span>). Sin embargo, esto también significa que estamos dispuestos a asumir un 5% de probabilidad de equivocarnos y rechazar <span class="math inline">\(H_0\)</span> siendo esta cierta. La forma en que podemos reducir este error es definiendo un nivel de significancia menor (por ejemplo, <span class="math inline">\(\alpha = 0.01\)</span> o 1%). Esto hace que la región de rechazo sea más pequeña y exigente, obligándonos a ser más estrictos para respaldar <span class="math inline">\(H_1\)</span> y disminuyendo así la probabilidad de cometer un Falso Positivo. Por esta razón, en estudios científicos o médicos más rigurosos se suele utilizar un nivel de significancia menor (<span class="math inline">\(\alpha = 0.01\)</span>).</li>
+<li><strong>Error Tipo II (Falso Negativo - <span class="math inline">\(\beta\)</span>)</strong>: Ocurre cuando no rechazamos la hipótesis nula (<span class="math inline">\(H_0\)</span>) cuando en realidad era falsa (es decir, cuando sí existía un efecto o diferencia real en la población y no fuimos capaces de detectarlo). Este error se representa mediante el símbolo <span class="math inline">\(\beta\)</span> y está directamente relacionado de forma inversa con la potencia de la prueba (<span class="math inline">\(1 - \beta\)</span>). La forma principal en la que podemos disminuir la probabilidad de cometer un Error Tipo II es aumentando la potencia del experimento, lo cual se logra primordialmente incrementando el tamaño de la muestra (<span class="math inline">\(n\)</span>), reduciendo así la variabilidad e incertidumbre en los datos.</li>
+</ul>
+<p>Para visualizar de forma clara todas las decisiones posibles y sus respectivos errores, podemos resumirlos en la siguiente matriz de decisión:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Decisión estadística</th>
+<th style="text-align: left;">Hipótesis Nula (<span class="math inline">\(H_0\)</span>) es Verdadera</th>
+<th style="text-align: left;">Hipótesis Nula (<span class="math inline">\(H_0\)</span>) es Falsa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>No rechazar <span class="math inline">\(H_0\)</span></strong></td>
+<td style="text-align: left;"><strong>Decisión Correcta</strong><br><br>(Probabilidad: <span class="math inline">\(1 - \alpha\)</span>)</td>
+<td style="text-align: left;"><strong>Error Tipo II</strong><br><br>(Falso Negativo - Probabilidad: <span class="math inline">\(\beta\)</span>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Rechazar <span class="math inline">\(H_0\)</span></strong></td>
+<td style="text-align: left;"><strong>Error Tipo I</strong><br><br>(Falso Positivo - Probabilidad: <span class="math inline">\(\alpha\)</span>)</td>
+<td style="text-align: left;"><strong>Decisión Correcta / Potencia</strong><br><br>(Probabilidad: <span class="math inline">\(1 - \beta\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled" title="Nota - La incertidumbre en muestras finitas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Nota - La incertidumbre en muestras finitas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dado que trabajamos con muestras finitas y datos empíricos, la probabilidad de cometer el Error Tipo I (<span class="math inline">\(\alpha\)</span>) y el Error Tipo II (<span class="math inline">\(\beta\)</span>) nunca será de exactamente 0%. No obstante, el objetivo en el diseño experimental es estructurar el estudio de modo que ambas probabilidades se minimicen al máximo posible.</p>
+</div>
+</div>
+</section>
+<section id="potencia-de-una-prueba-1---beta" class="level2">
+<h2 class="anchored" data-anchor-id="potencia-de-una-prueba-1---beta">Potencia de una Prueba (<span class="math inline">\(1 - \beta\)</span>)</h2>
+<p>La potencia de la prueba está directamente vinculada con la probabilidad de cometer un Error Tipo II (<span class="math inline">\(\beta\)</span>), ya que matemáticamente se expresa como <span class="math inline">\(1 - \beta\)</span>. Se define formalmente como la probabilidad de rechazar correctamente la hipótesis nula (<span class="math inline">\(H_0\)</span>) y, por ende, respaldar la hipótesis alternativa (<span class="math inline">\(H_1\)</span>) cuando la diferencia o efecto buscado realmente existe en la población.</p>
+<p>Por lo general, en experimentos e investigaciones se busca alcanzar una potencia estadística esperada de entre el 80% y el 90% (<span class="math inline">\(0.80\)</span> a <span class="math inline">\(0.90\)</span>). Cuanto más cercano esté este valor al 100%, mayor certeza tendremos de que el experimento logrará detectar exitosamente cualquier diferencia real entre los parámetros evaluados.</p>
+<p>Existen tres factores principales que pueden alterar la potencia de una prueba:</p>
+<ol type="1">
+<li><p><strong>Nivel de Significancia (<span class="math inline">\(\alpha**\)</span>)</strong>: Si aumentamos el nivel de significancia, la potencia de la prueba también aumentará. Por ejemplo, si pasamos de <span class="math inline">\(\alpha = 0.01\)</span> (1%) a <span class="math inline">\(\alpha = 0.05\)</span> (5%), habrá una región más amplia en la cual rechazar <span class="math inline">\(H_0\)</span>, lo que reduce el área en la que se comete un Error Tipo II (<span class="math inline">\(\beta\)</span>). Sin embargo, esto trae consigo una consecuencia indeseada: al aumentar <span class="math inline">\(\alpha\)</span>, incrementamos de forma directa la probabilidad de cometer un Error Tipo I (Falso Positivo). Por esta razón, modificar el nivel de significancia no suele ser la estrategia recomendada para ganar potencia.</p></li>
+<li><p><strong>Tamaño del Efecto (Effect Size)</strong>: Se refiere a la magnitud de la diferencia real entre los parámetros que estamos comparando. Retomando el ejemplo de las tasas de conversión de los Sitios Web A y B, el tamaño del efecto representa la distancia que separa los centros de ambas distribuciones:</p>
+<ul>
+<li>Un efecto pequeño ocurre cuando la mejora de un grupo respecto al otro es mínima, provocando un alto grado de solapamiento (superposición) entre las distribuciones.</li>
+<li>Un efecto grande ocurre cuando la diferencia entre los parámetros es considerable, separando ampliamente las distribuciones y reduciendo el solapamiento al mínimo, lo que incrementa sustancialmente la potencia de la prueba.</li>
+</ul>
+<p>Debido a que el tamaño del efecto es un rasgo intrínseco del fenómeno que estudiamos, no está en nuestras manos manipularlo directamente.</p></li>
+<li><p><strong>Tamaño de la Muestra (<span class="math inline">\(n\)</span>)</strong>: Es el factor más importante y el que mejor podemos controlar durante el diseño del experimento. El tamaño de la muestra está directamente vinculado con el Error Estándar (<span class="math inline">\(SE\)</span>) de la distribución muestral, el cual indica qué tan dispersa o ancha es dicha distribución. La fórmula del Error Estándar es: <span class="math display">\[SE = \frac{\sigma}{\sqrt{n}}\]</span></p>
+<p>Donde:</p>
+<ul>
+<li><span class="math inline">\(\sigma\)</span> es la desviación estándar poblacional.</li>
+<li><span class="math inline">\(n\)</span> es el tamaño de la muestra (cantidad de datos recolectados).</li>
+</ul>
+<p>Al encontrarse el tamaño de la muestra (<span class="math inline">\(n\)</span>) en el denominador, si <span class="math inline">\(n\)</span> es pequeño, el Error Estándar será grande, haciendo que las distribuciones sean más anchas y se solapen fuertemente. Por el contrario, al recolectar una mayor cantidad de datos (<span class="math inline">\(n\)</span> grande), el Error Estándar se vuelve pequeño, haciendo que las distribuciones sean más estrechas y concentradas. Este estrechamiento reduce drásticamente el solapamiento entre ellas, haciendo las estimaciones mucho más precisas y elevando la potencia de la prueba (<span class="math inline">\(1 - \beta\)</span>).</p></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tip - Cálculo del tamaño muestral">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip - Cálculo del tamaño muestral
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Comprender la relación entre el tamaño de la muestra y el Error Estándar es fundamental al diseñar experimentos, ya que nos permite realizar un cálculo de tamaño muestral para determinar con exactitud cuántos datos necesitamos recolectar para garantizar la potencia deseada (por ejemplo, el 80%) antes de salir al campo a recolectar los datos.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="supuestos-de-las-pruebas-paramétricas" class="level1">
+<h1><strong>Supuestos de las Pruebas Paramétricas</strong></h1>
+<p>Decimos que una prueba de hipótesis es paramétrica debido a que los datos recolectados deben cumplir con ciertos supuestos fundamentales sobre la población subyacente. Entre estos, destaca el supuesto de normalidad (que los datos se ajusten a una curva gaussiana) y, en pruebas de comparación de dos o más grupos, el supuesto de homocedasticidad (igualdad de varianzas). A continuación, exploraremos en qué consiste el supuesto de normalidad y cómo comprobarlo rigurosamente en nuestros experimentos.</p>
+<section id="supuesto-de-normalidad" class="level2">
+<h2 class="anchored" data-anchor-id="supuesto-de-normalidad"><strong>Supuesto de Normalidad</strong></h2>
+<p>El supuesto de normalidad consiste en evaluar, ya sea de forma gráfica o analítica/estadística, si un conjunto de datos empíricos sigue una distribución teórica normal, también conocida como distribución gaussiana. Esta distribución se caracteriza por ser perfectamente simétrica respecto a su centro y describe cómo se agrupan los valores de una variable aleatoria continua alrededor de su media.</p>
+<p>Su Función de Densidad de Probabilidad (PDF, por sus siglas en inglés) está definida matemáticamente por la siguiente ecuación:</p>
+<p><span class="math display">\[P(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left( \frac{x-\mu}{\sigma} \right)^{2}}\]</span></p>
+<p>Donde:</p>
+<ul>
+<li><span class="math inline">\(x\)</span>: Es nuestra variable aleatoria (un valor específico en el eje horizontal).</li>
+<li><span class="math inline">\(P(x)\)</span>: Es la densidad de probabilidad para ese valor específico <span class="math inline">\(x\)</span>.</li>
+<li><span class="math inline">\(\mu\)</span> (Mu): Es la media poblacional. Define la ubicación del centro exacto de la campana.</li>
+<li><span class="math inline">\(\sigma\)</span> (Sigma): Es la desviación estándar poblacional. Define qué tan “ancha” o “estrecha” es la campana, midiendo la dispersión promedio de los datos respecto a la media.</li>
+<li><span class="math inline">\(\frac{1}{\sigma \sqrt{2\pi}}\)</span>: Es el factor de normalización. Su función geométrica es garantizar que el área total bajo la curva sea exactamente igual a <span class="math inline">\(1\)</span> (es decir, el 100% de la probabilidad).</li>
+<li><span class="math inline">\(e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}\)</span>: Es el componente exponencial que le otorga la forma característica de decaimiento simétrico a ambos lados de la media.</li>
+</ul>
+<p>Para comprobar si los datos de nuestras muestras cumplen con el supuesto de normalidad, disponemos de tres herramientas principales: dos comprobaciones gráficas y una prueba estadística analítica.</p>
+<section id="histograma" class="level3">
+<h3 class="anchored" data-anchor-id="histograma"><em>Histograma</em></h3>
+<p>El histograma nos permite visualizar la distribución empírica de las frecuencias de los datos. Es muy fácil de construir e interpretar, permitiéndonos descartar rápidamente la normalidad cuando la distribución muestra un comportamiento claramente asimétrico. Por ejemplo, si observamos que la mayoría de las barras están acumuladas hacia la izquierda (sesgo a la derecha) o hacia la derecha (sesgo a la izquierda), o si existen múltiples picos (distribución bimodal o multimodal), podemos descartar el supuesto de normalidad.</p>
+<p>Sin embargo, si la forma del histograma se asemeja a una campana, no podemos asumir con total certeza que siga una distribución normal teórica. Por ello, el histograma sirve como una primera inspección visual para descartar casos evidentes de no normalidad, pero debe complementarse con otras herramientas.</p>
+</section>
+<section id="gráfico-cuantil-cuantil-q-q-plot" class="level3">
+<h3 class="anchored" data-anchor-id="gráfico-cuantil-cuantil-q-q-plot"><em>Gráfico Cuantil-Cuantil (Q-Q Plot)</em></h3>
+<p>Es una herramienta visual sustancialmente más robusta que el histograma. Consiste en graficar los cuantiles observados en nuestros datos reales frente a los cuantiles teóricos que tendría una distribución normal estándar (<span class="math inline">\(\mu = 0, \sigma = 1\)</span>).</p>
+<p>Si nuestros datos provienen de una distribución normal, los puntos en el gráfico se alinearán estrechamente a lo largo de una línea diagonal de referencia a 45 grados. Esta gráfica es fácil de interpretar y generar mediante lenguajes de programación como Python o R. Su ventaja radica en que las desviaciones en las colas o en el centro de la distribución saltan a la vista de inmediato. Aunque nos brinda un mayor grado de certeza que el histograma, para contar con el máximo rigor científico se recomienda acompañarla de una prueba estadística analítica como la prueba Shapiro-Wilk.</p>
+</section>
+<section id="prueba-de-shapiro-wilk" class="level3">
+<h3 class="anchored" data-anchor-id="prueba-de-shapiro-wilk"><em>Prueba de Shapiro-Wilk</em></h3>
+<p>Es una prueba de hipótesis diseñada específicamente para evaluar el supuesto de normalidad, siendo considerada una de las más potentes y rigurosas en la literatura estadística (especialmente para tamaños de muestra pequeños y medianos, generalmente <span class="math inline">\(n &lt; 50\)</span> o <span class="math inline">\(n &lt; 100\)</span>).</p>
+<p>La prueba de Shapiro-Wilk plantea el siguiente contraste de hipótesis:</p>
+<ul>
+<li><strong>Hipótesis Nula (<span class="math inline">\(H_0\)</span>)</strong>: Los datos provienen de una población con distribución normal (se cumple el supuesto de normalidad).</li>
+<li><strong>Hipótesis Alternativa (<span class="math inline">\(H_1\)</span>)</strong>: Los datos no provienen de una población con distribución normal.</li>
+</ul>
+<p>Al ejecutar esta prueba en software estadístico o en Python (mediante librerías como scipy.stats), establecemos un nivel de significancia de referencia (Generalmente un <span class="math inline">\(\alpha = 0.05\)</span>):</p>
+<ul>
+<li>Si el valor <span class="math inline">\(p \le 0.05\)</span>: Se rechaza la hipótesis nula (<span class="math inline">\(H_0\)</span>) a favor de la hipótesis alternativa (<span class="math inline">\(H_1\)</span>). Hay evidencia suficiente para concluir que los datos no siguen una distribución normal.</li>
+<li>Si el valor <span class="math inline">\(p &gt; 0.05\)</span>: No existe evidencia suficiente para rechazar la hipótesis nula (<span class="math inline">\(H_0\)</span>). Por lo tanto, asumimos que los datos cumplen con el supuesto de normalidad y podemos continuar con la prueba paramétrica.</li>
+</ul>
+<p>Un aspecto crítico a considerar sobre la prueba de Shapiro-Wilk es que es altamente sensible al tamaño de la muestra (<span class="math inline">\(n\)</span>). Con muestras muy grandes (<span class="math inline">\(n &gt; 200\)</span> o <span class="math inline">\(300\)</span>), pequeñas desviaciones irrelevantes en la distribución harán que el valor <span class="math inline">\(p\)</span> sea menor a <span class="math inline">\(0.05\)</span>, rechazando la normalidad aun cuando los datos sean prácticamente normales. Por esta razón, la decisión final siempre debe tomarse evaluando en conjunto la prueba estadística y las gráficas (Q-Q plot).</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Desviaciones del supuesto de normalidad, valores atípicos y el tamaño de la muestra">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Desviaciones del supuesto de normalidad, valores atípicos y el tamaño de la muestra
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un aspecto fundamental en la inferencia estadística es la relación entre el tamaño de la muestra y el supuesto de normalidad. Cuando manejamos muestras grandes (generalmente <span class="math inline">\(n \ge 30\)</span>, y preferiblemente <span class="math inline">\(n \ge 50\)</span>), entra en juego el Teorema del Límite Central (TLC). Este teorema establece que la distribución muestral de las medias se aproximará a una distribución normal, independientemente de la forma que tenga la distribución original de la variable en la población.</p>
+<p>Gracias al TLC, el supuesto de normalidad se flexibiliza en muestras grandes y la prueba paramétrica sigue siendo válida. Sin embargo, se deben tener presentes tres limitaciones críticas:</p>
+<ol type="1">
+<li><strong>Sesgos Extremos</strong>: Si la distribución original presenta una asimetría o sesgo muy severo (por ejemplo, una distribución exponencial o de ley de potencia), se requerirán muestras considerablemente mayores (<span class="math inline">\(n &gt; 100\)</span> o <span class="math inline">\(200\)</span>) para que la distribución muestral de las medias logre la normalidad.</li>
+<li><strong>Representatividad de los Parámetros</strong>: Las pruebas paramétricas evalúan parámetros como la media (<span class="math inline">\(\mu\)</span>) y la desviación estándar (<span class="math inline">\(\sigma\)</span>). Si los datos originales son fuertemente asimétricos, la media deja de ser una medida descriptiva representativa de la tendencia central del conjunto de datos.</li>
+<li><strong>Presencia de Valores Atípicos (Outliers)</strong>: Los valores atípicos distorsionan severamente tanto la media como la varianza muestral, pudiendo invalidar por completo los resultados de una prueba paramétrica, sin importar qué tan grande sea la muestra.</li>
+</ol>
+<p>La estrategia recomendada es incialmente, evaluar la normalidad con la prueba de Shapiro-Wilk. Si la prueba rechaza la normalidad (<span class="math inline">\(p &lt; 0.05\)</span>), examinar el gráfico Cuantil-Cuantil (Q-Q plot) con una banda de confianza del 95%. Si las desviaciones de la diagonal son leves y se concentran únicamente en los extremos de las colas, y la muestra es suficientemente grande (<span class="math inline">\(n \ge 30\)</span>) sin valores atípicos severos, se puede proceder con la prueba paramétrica amparándose en el Teorema del Límite Central. En caso de que nada anterior se cumpla, se recomienda proceder con las pruebas de Hipótesis No Paramétricas.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="supuesto-de-homocedasticidad" class="level2">
+<h2 class="anchored" data-anchor-id="supuesto-de-homocedasticidad"><strong>Supuesto de Homocedasticidad</strong></h2>
+<p>El supuesto de homocedasticidad (tambien denominado homogeneidad de varianzas) es una condición fundamental en las pruebas de hipótesis paramétricas que involucran la comparación de dos o más muestras (como el Análisis de Varianza - ANOVA).</p>
+<p>Decimos que dos o más conjuntos de datos cumplen con el supuesto de homocedasticidad cuando todas las muestras presentan varianzas poblacionales iguales desde el punto de vista estadístico (<span class="math inline">\(\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2\)</span>). Es crucial aclarar que el término “iguales” no exige que el cálculo numérico exacto de las varianzas muestrales sea idéntico, sino que las diferencias observadas entre ellas sean tan pequeñas que puedan atribuirse razonablemente al azar muestral.</p>
+<p>Asimismo, es importante resaltar que la homocedasticidad evalúa la dispersión (la anchura de las curvas de distribución), no la localización central. Por ende, dos distribuciones pueden tener medias totalmente distintas (<span class="math inline">\(\mu_1 \neq \mu_2\)</span>) y, aun así, ser totalmente homocedásticas si la amplitud o “ancho” de sus campanas gaussianas es estadísticamente equivalente.</p>
+<p>Por el contrario, cuando las varianzas entre los grupos difieren de forma estadísticamente significativa, decimos que existe heterocedasticidad. Gráficamente, esto se evidencia al comparar, por ejemplo, una distribución gaussiana estrecha y alta (baja varianza) con otra ancha y achatada (alta varianza). En diseños experimentales con más de dos grupos (como ANOVA), basta con que al menos una de las muestras presente una varianza significativamente distinta a las demás para declarar la presencia de heterocedasticidad en todo el estudio.</p>
+<p>Para evaluar el supuesto de homocedasticidad, proceso que habitualmente se realiza tras verificar la normalidad de los datos, disponemos de dos herramientas complementarias: un análisis gráfico exploratorio y una prueba estadística analítica.</p>
+<section id="diagrama-de-cajas" class="level3">
+<h3 class="anchored" data-anchor-id="diagrama-de-cajas"><em>Diagrama de Cajas</em></h3>
+<p>El diagrama de cajas es la herramienta gráfica por excelencia para comparar visualmente la dispersión entre múltiples grupos. Este gráfico resume la distribución de los datos a través de sus cuantiles principales:</p>
+<ul>
+<li><strong>Primer Cuartil (<span class="math inline">\(Q_1\)</span>)</strong>: Límite inferior de la caja (percentil 25).</li>
+<li><strong>Mediana (Cuartil 2 - <span class="math inline">\(Q_2\)</span>)</strong>: Representa el centro del conjunto de datos (percentil 50).</li>
+<li><strong>Tercer Cuartil (<span class="math inline">\(Q_3\)</span>)</strong>: Límite superior de la caja (percentil 75).</li>
+<li><strong>Rango Intercuartil (<span class="math inline">\(\text{IQR} = Q_3 - Q_1\)</span>)</strong>: Representa la altura de la caja y contiene el 50% central de los datos.</li>
+</ul>
+<p>La altura de la caja (<span class="math inline">\(\text{IQR}\)</span>) es directamente proporcional a la variabilidad o dispersión de la muestra:</p>
+<ul>
+<li>Una caja más alta indica una mayor varianza (datos más dispersos).</li>
+<li>Una caja más baja indica una menor varianza (datos más concentrados).</li>
+</ul>
+<p>Al graficar los diagramas de cajas lado a lado para cada grupo mediante librerías de programación como matplotlib o seaborn en Python, podemos evaluar visualmente si las alturas de las cajas son parecidas. Si las cajas tienen alturas similares, existen indicios claros de homocedasticidad. Si las alturas difieren marcadamente entre sí, hay indicios de heterocedasticidad.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Limitación práctica del Diagrama de Cajas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Limitación práctica del Diagrama de Cajas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La inspección visual del gráfico de cajas es sumamente intuitiva y directa cuando comparamos dos o tres grupos. Sin embargo, a medida que aumenta el número de muestras (<span class="math inline">\(k \ge 4\)</span>), se vuelve más difuso determinar a simple vista si las diferencias en la altura de las cajas es significativa o no. Por esta razón, la gráfica debe acompañarse siempre de una prueba analítica rigurosa.</p>
+</div>
+</div>
+</section>
+<section id="prueba-de-bartlet" class="level3">
+<h3 class="anchored" data-anchor-id="prueba-de-bartlet"><em>Prueba de Bartlet</em></h3>
+<p>Al igual que la prueba de Shapiro-Wilk para el supuesto de normalidad, la Prueba de Bartlett es un contraste de hipótesis diseñado para determinar formalmente si dos o más grupos provienen de poblaciones con la misma varianza.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Requisito previo indispensable">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Requisito previo indispensable
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La prueba de Bartlett es sumamente sensible a las desviaciones de la normalidad. Por lo tanto, solo debe utilizarse si se ha verificado previamente que los datos de todos los grupos cumplen rigurosamente con el supuesto de normalidad.</p>
+</div>
+</div>
+<p>La prueba de Bartlett plantea la siguiente estructura de hipótesis:</p>
+<ul>
+<li><strong>Hipótesis Nula (<span class="math inline">\(H_0\)</span>)</strong>: Las varianzas de todas las poblaciones evaluadas son iguales (<span class="math inline">\(\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2\)</span>). Se cumple el supuesto de homocedasticidad.</li>
+<li><strong>Hipótesis Alternativa (<span class="math inline">\(H_1\)</span>)</strong>: Al menos una de las poblaciones tiene una varianza diferente a las demás. Existe heterocedasticidad.</li>
+</ul>
+<p>Al ejecutar la prueba en software estadístico o mediante librerías como scipy.stats en Python, comparamos el valor <span class="math inline">\(p\)</span> obtenido con el nivel de significancia prefijado (Generalmente <span class="math inline">\(\alpha = 0.05\)</span>):</p>
+<ul>
+<li>Si el valor <span class="math inline">\(p \le 0.05\)</span>: Se rechaza la hipótesis nula (<span class="math inline">\(H_0\)</span>) a favor de la hipótesis alternativa (<span class="math inline">\(H_1\)</span>). Hay evidencia suficiente para concluir que los grupos tienen varianzas significativamente distintas (heterocedasticidad).</li>
+<li>Si el valor <span class="math inline">\(p &gt; 0.05\)</span>: No existe evidencia suficiente para rechazar la hipótesis nula (<span class="math inline">\(H_0\)</span>). Por lo tanto, asumimos que se cumple el supuesto de homocedasticidad y podemos proceder con la prueba de hipótesis paramétrica planeada.</li>
+</ul>
+<p>Al igual que en otras pruebas analíticas, el valor <span class="math inline">\(p\)</span> de la prueba de Bartlett se ve influenciado por el tamaño de la muestra (<span class="math inline">\(n\)</span>). Con muestras pequeñas, la prueba puede perder potencia estadística (riesgo de Error Tipo II), mientras que con muestras grandes, pequeñas diferencias menores en la varianza pueden resultar estadísticamente significativas. Por ello, la decisión metodológica final debe basarse en el análisis conjunto del gráfico de cajas y la prueba analítica.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tip - ¿Qué hacer si los datos NO cumplen el supuesto de normalidad?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip - ¿Qué hacer si los datos NO cumplen el supuesto de normalidad?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dado que la prueba de Bartlett es muy sensible si los datos se alejan de la distribución gaussiana, en casos donde la normalidad no se cumpla estrictamente se recomienda emplear la Prueba de Levene o la Prueba de Fligner-Killeen. La prueba de Levene es mucho más robusta ante desviaciones de la normalidad y evalúa la homocedasticidad analizando las desviaciones absolutas respecto a la mediana de cada grupo.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="principales-pruebas-de-hipótesis-paramétricas" class="level1">
+<h1><strong>Principales Pruebas de Hipótesis Paramétricas</strong></h1>
+<p>Una vez comprendidos e interiorizados los conocimientos previos y los supuestos esenciales que rigen a la inferencia paramétrica, recordando que el supuesto de normalidad debe cumplirse de manera transversal en todas las pruebas que realizaremos, mientras que el de homocedasticidad aplicará según la prueba específica, estamos listos para abordar las técnicas propiamente dichas.</p>
+<p>A lo largo de este recorrido, exploraremos las pruebas paramétricas más relevantes y utilizadas en el ámbito de la Ciencia de Datos y el Machine Learning: la Prueba Z (Z-Test), la Prueba t de Student (t-Test) y el Análisis de Varianza (ANOVA, por sus siglas en inglés: Analysis of Variance).</p>
+<p>Para garantizar un aprendizaje significativo y estructurado, cada una de estas pruebas se presentará mediante una explicación teórica de sus fundamentos y características principales, seguida de un caso práctico aplicado. Este desarrollo seguirá de manera rigurosa la siguiente metodología de 11 pasos para el diseño, ejecución y evaluación de pruebas de hipótesis:</p>
+<ol type="1">
+<li><strong>Definición del Problema de Negocio</strong>: Formulación clara de la necesidad o pregunta que motiva el análisis.</li>
+<li><strong>Traducción al Contexto de Ciencia de Datos</strong>: Conversión de la problemática de negocio en un planteamiento estadístico y de Machine Learning.</li>
+<li><strong>Planteamiento de Hipótesis</strong>: Definición explícita de la Hipótesis Nula (<span class="math inline">\(H_0\)</span>) y la Hipótesis Alterna (<span class="math inline">\(H_1\)</span>).</li>
+<li><strong>Establecimiento del Nivel de Significancia (<span class="math inline">\(\alpha\)</span>)</strong>: Fijación del umbral de tolerancia para el Error Tipo I (Por lo general, utilizaremos <span class="math inline">\(\alpha = 0.05\)</span>).</li>
+<li><strong>Determinación de la Potencia (<span class="math inline">\(1 - \beta\)</span>) y Tamaño de Efecto Esperado</strong>: Definición de la capacidad de detección del test y la magnitud del efecto de interés.</li>
+<li><strong>Cálculo del Tamaño Muestral (<span class="math inline">\(n\)</span>)</strong>: Estimación del número de observaciones requeridas a partir de los parámetros que hayamos establecidos.</li>
+<li><strong>Recolección y Preparación de Datos</strong>: Obtención y acondicionamiento de los datos necesarios.</li>
+<li><strong>Evaluación de Supuestos Estadísticos</strong>: Verificación rigurosa de los supuestos para respaldar la validez de la prueba.</li>
+<li><strong>Ejecución de la Prueba y Obtención del <span class="math inline">\(p\)</span>-valor</strong>: Cálculo del estadístico de prueba y de la probabilidad asociada.</li>
+<li><strong>Toma de Decisión Estadística</strong>: Evaluación del <span class="math inline">\(p\)</span>-valor frente a <span class="math inline">\(\alpha\)</span> para determinar si se rechaza o no se rechaza la Hipótesis Nula (<span class="math inline">\(H_0\)</span>).</li>
+<li><strong>Evaluación del Tamaño del Efecto Resultante e Interpretación del Negocio</strong>: Medición de la relevancia práctica del hallazgo y su traducción a decisiones estratégicas.</li>
+</ol>
+<p>Esta estructura sistemática nos asegurará tomar decisiones fundamentadas en evidencia estadística sólida, minimizando sesgos y maximizando el impacto analítico en proyectos reales.</p>
+<p>Para dar inicio al estudio de las Pruebas de Hipótesis Paramétricas, comenzaremos examinando en detalle la Prueba Z (Z-Test).</p>
+</section>
+<section id="las-prueba-z-z-test" class="level1">
+<h1>Las Prueba Z (z-Test)</h1>
+<section id="la-prueba-z-de-una-muestra" class="level2">
+<h2 class="anchored" data-anchor-id="la-prueba-z-de-una-muestra">LA Prueba Z de una muestra</h2>
+<div id="28d0ce67" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Código</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Esta es una prueba de Funcionamiento de shinylive en Quarto"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -268,6 +646,8 @@ def plot():
     )</code></pre>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

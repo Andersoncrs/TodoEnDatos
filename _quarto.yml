@@ -28,7 +28,7 @@ format:
     embed-resources: false
     link-external-newwindow: true
     link-external-icon: true
-
+    include-in-header: analytics.html
 
 website:
   title: "TodoEnDatos"

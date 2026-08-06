@@ -241,7 +241,10 @@ Esta estructura sistemática nos asegurará tomar decisiones fundamentadas en ev
 
 Para dar inicio al estudio de las Pruebas de Hipótesis Paramétricas, comenzaremos examinando en detalle la Prueba Z (Z-Test).
 
-## Prueba Z de una Muestra
+# Las Prueba Z (z-Test)
+
+## LA Prueba Z de una muestra
+
 
 
 

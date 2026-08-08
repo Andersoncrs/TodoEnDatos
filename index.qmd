@@ -2,6 +2,7 @@
 pagetitle: "TodoEnDatos | Ciencia de Datos y Machine Learning"
 description: "Tutoriales prácticos y guías de analítica de datos, machine learning y deep learning aplicados al mundo real."
 page-layout: full
+comments: false
 format:
   html:
     toc: false

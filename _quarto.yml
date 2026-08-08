@@ -41,6 +41,18 @@ website:
     location: navbar
     type: overlay
     copy-button: true
+  comments:
+    giscus:
+      repo: andersoncrs/todoendatos
+      repo-id: R_kgDOTQyDEg
+      category: Comentarios Web
+      category-id: DIC_kwDOTQyDEs4DC6ZW
+      mapping: pathname
+      reactions-enabled: true
+      input-position: top
+      theme: light
+      language: es
+      loading: lazy
 
   navbar:
     collapse: true
